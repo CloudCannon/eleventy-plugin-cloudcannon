@@ -1,0 +1,23 @@
+{
+  "name": "eleventy-plugin-cloudcannon",
+  "version": "0.0.1",
+  "description": "Eleventy plugin to create CloudCannon editor details",
+  "main": ".eleventy.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cloudcannon/eleventy-plugin-cloudcannon.git"
+  },
+  "keywords": [
+    "eleventy-plugin",
+    "cloudcannon"
+  ],
+  "author": "Ross Phillips",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon/issues"
+  },
+  "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme"
+}

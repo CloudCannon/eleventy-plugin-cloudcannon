@@ -1,0 +1,70 @@
+---
+eleventyExcludeFromCollections: true
+permalink: /_cloudcannon/config.json
+---
+{
+	"time": "{{ build.date.toISOString() }}",
+
+	"cloudcannon": {
+		"name": "eleventy-plugin-cloudcannon",
+		"version": "0.0.1"
+	},
+
+	"generator": {
+		"name": "eleventy",
+		"version": "{{ pkg.dependencies['@11ty/eleventy'] }}",
+		"environment": "{{ environment }}",
+		"metadata": {
+			"markdown": "commonmark",
+			"commonmark": {}
+		}
+	},
+
+	"source": "",
+
+	{% if cloudcannon['timezone'] %}
+		"timezone": "{{ cloudcannon['timezone'] }}",
+	{% endif %}
+
+	"base-url": "",
+
+	"collections": {{ getCollections(cloudcannon) | ccJsonify | safe }},
+
+	{% if cloudcannon['comments'] %}
+		"comments": {{ cloudcannon['comments'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['input-options'] %}
+		"input-options": {{ cloudcannon['input-options'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['editor'] %}
+		"editor": {{ cloudcannon['editor'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['source-editor'] %}
+		"source-editor": {{ cloudcannon['source-editor'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['explore'] %}
+		"explore": {{ cloudcannon['explore'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['array-structures'] %}
+		"array-structures": {{ cloudcannon['array-structures'] | ccJsonify | safe }},
+	{% endif %}
+
+	{% if cloudcannon['select-data'] %}
+		"select-data": {{ cloudcannon['select-data'] | ccJsonify | safe }},
+	{% endif %}
+
+	"paths": {
+		{% if cloudcannon['uploads-path'] %}
+			"uploads": "{{ cloudcannon['uploads-path'] }}",
+		{% endif %}
+		"data": "{% ccConfigPath 'data' %}",
+		"collections": "",
+		"includes": "{% ccConfigPath 'includes' %}",
+		"layouts": "{% ccConfigPath 'layouts' %}"
+	}
+}

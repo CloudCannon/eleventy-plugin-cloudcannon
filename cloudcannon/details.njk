@@ -1,0 +1,63 @@
+---
+eleventyExcludeFromCollections: true
+permalink: /_cloudcannon/details.json
+---
+{
+	"time": "{{ build.date.toISOString() }}",
+	"cloudcannon": {
+		"name": "eleventy-plugin-cloudcannon",
+		"version": "0.0.1"
+	},
+	"generator": {
+		"name": "eleventy",
+		"version": "{{ pkg.dependencies['@11ty/eleventy'] }}",
+		"environment": "{{ environment }}",
+		"metadata": {
+			"markdown": "commonmark",
+			"commonmark": {}
+		}
+	},
+	"collections": {
+		{%- for tag, items in getCollections() %}
+			"{{ tag }}": [
+				{% for item in items %}
+					{
+						"path": "{{ item.inputPath.replace('./', '') if item.inputPath else '' }}",
+						"url": "{{ item.url if item.url else '' }}",
+						"collection": "{{ tag }}",
+						"title": "{{ item.data.title }}",
+						"name": "{{ item.data.name }}",
+						"layout": "{{ item.template._layoutKey }}",
+						"_unlisted": {{ item.data._unlisted === true }},
+						"output": {{ item.url !== false }}
+						{% if item.data._options %},"_options": {{ item.data._options | ccJsonify | safe }}{% endif %}
+						{% if item.data._comments %},"_comments": {{ item.data._comments | ccJsonify | safe }}{% endif %}
+					}{{ '' if loop.last else ',' }}
+				{% endfor %}
+			]{{ '' if loop.last else ',' }}
+		{%- endfor %}
+	},
+	"pages": [
+		{%- for item in getPages() %}
+			{
+				"path": "{{ item.inputPath.replace('./', '') if item.inputPath else '' }}",
+				"url": "{{ item.url if item.url else '' }}",
+				"title": "{{ item.data.title }}",
+				"name": "{{ item.data.name }}",
+				"layout": "{{ item.template._layoutKey }}",
+				"_unlisted": {{ item.data._unlisted === true }},
+				"output": {{ item.url !== false }}
+				{% if item.data._options %},"_options": {{ item.data._options | ccJsonify | safe }}{% endif %}
+				{% if item.data._comments %},"_comments": {{ item.data._comments | ccJsonify | safe }}{% endif %}
+			}{{ '' if loop.last else ',' }}
+		{% endfor %}
+	],
+	"static-pages": [
+		{%- for item in getStaticPages() %}
+			{
+				"path": "{{ item.inputPath.replace('./', '') if item.inputPath else '' }}",
+				"url": "{{ item.url if item.url else '' }}"
+			}{{ '' if loop.last else ',' }}
+		{% endfor %}
+	]
+}
