@@ -4,10 +4,10 @@ An Eleventy (11ty) plugin that creates [CloudCannon](https://cloudcannon.com/) e
 
 ## Installation
 
-Available on [npm](https://www.npmjs.com/package/@cloudcannon/eleventy-plugin-cloudcannon) (TODO).
+Available on [npm](https://www.npmjs.com/package/eleventy-plugin-cloudcannon).
 
 ```
-npm install @cloudcannon/eleventy-plugin-cloudcannon --save
+npm install eleventy-plugin-cloudcannon --save
 ```
 
 Add the following `addPlugin` call to your `module.exports` function in the Eleventy config file
