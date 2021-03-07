@@ -27,17 +27,17 @@ If you set custom `dir` values for your site, pass them to the plugin as well:
 const pluginCloudCannon = require("eleventy-plugin-cloudcannon");
 
 module.exports = function (eleventyConfig) {
-	const config = {
-		dir: {
-			data: '_my-custom-data',
-			layouts: '_layouts',
-			includes: '_my-includes'
-		}
-	};
+  const config = {
+    dir: {
+      data: '_my-custom-data',
+      layouts: '_layouts',
+      includes: '_my-includes'
+    }
+  };
 
   eleventyConfig.addPlugin(pluginCloudCannon, config);
 
-	return config;
+  return config;
 };
 ```
 
@@ -68,31 +68,31 @@ The following is an empty template as an example.
 
 ```
 {
-	"timezone": "",
-	"collections": {
-		"projects": {
-			"_path": "",
-			"name": "",
-			"title": "",
-			"output": false,
-			"_sort-key": "",
-			"_subtext-key": "",
-			"_image-key": "",
-			"_image-size": "",
-			"_singular-name": "",
-			"_singular-key": "",
-			"_disable-add": false,
-			"_icon": "",
-			"_add-options": []
-		}
-	},
-	"comments": {},
-	"input-options": {},
-	"editor": {},
-	"source-editor": {},
-	"explore": {},
-	"array-structures": {},
-	"select-data": {}
+  "timezone": "",
+  "collections": {
+    "projects": {
+      "_path": "",
+      "name": "",
+      "title": "",
+      "output": false,
+      "_sort-key": "",
+      "_subtext-key": "",
+      "_image-key": "",
+      "_image-size": "",
+      "_singular-name": "",
+      "_singular-key": "",
+      "_disable-add": false,
+      "_icon": "",
+      "_add-options": []
+    }
+  },
+  "comments": {},
+  "input-options": {},
+  "editor": {},
+  "source-editor": {},
+  "explore": {},
+  "array-structures": {},
+  "select-data": {}
 }
 ```
 
