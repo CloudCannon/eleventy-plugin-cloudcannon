@@ -2,6 +2,8 @@
 
 An Eleventy (11ty) plugin that creates [CloudCannon](https://cloudcannon.com/) editor details.
 
+![version badge](https://img.shields.io/npm/v/eleventy-plugin-cloudcannon?logo=npm) ![downloads badge](https://img.shields.io/npm/dt/eleventy-plugin-cloudcannon)
+
 ## Installation
 
 Available on [npm](https://www.npmjs.com/package/eleventy-plugin-cloudcannon).
@@ -14,7 +16,7 @@ Add the following `addPlugin` call to your `module.exports` function in the Elev
 (`.eleventy.js` by default):
 
 ```
-const pluginCloudCannon = require("eleventy-plugin-cloudcannon");
+const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginCloudCannon, options);
@@ -24,7 +26,7 @@ module.exports = function (eleventyConfig) {
 If you set custom `dir` values for your site, pass them to the plugin as well:
 
 ```
-const pluginCloudCannon = require("eleventy-plugin-cloudcannon");
+const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
   const config = {
@@ -51,11 +53,11 @@ cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
 
 Matches what you set or return in your main config. All optional, including the parameter itself.
 
-| Key          | Type   | Default                                                                | Description                                         |
-| ------------ | ------ | ---------------------------------------------------------------------- | --------------------------------------------------- |
-| `pathPrefix` | string | `""`                                                                   | The custom pathPrefix setting your site uses (TODO) |
-| `input`      | string | `"."`                                                                  | The custom input path your site uses         (TODO) |
-| `dir`        | object | `{ "data": "_data", "includes": "_includes", "layouts": "_includes" }` | The custom paths your site uses (if any)            |
+| Key          | Type   | Default                                                                | Description                                  |
+| ------------ | ------ | ---------------------------------------------------------------------- | -------------------------------------------- |
+| `pathPrefix` | string | `""`                                                                   | Custom pathPrefix setting your site uses |
+| `input`      | string | `"."`                                                                  | Custom input path your site uses         |
+| `dir`        | object | `{ "data": "_data", "includes": "_includes", "layouts": "_includes" }` | Custom paths your site uses (if any)     |
 
 ## Data
 

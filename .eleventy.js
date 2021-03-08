@@ -6,6 +6,8 @@ module.exports = function (eleventyConfig, config = {}) {
 		...config.dir
 	};
 
-	eleventyConfig.addFilter('ccJsonify', obj => obj ? JSON.stringify(obj) : null);
-	eleventyConfig.addNunjucksShortcode('ccConfigPath', key => paths[key] || '');
+	eleventyConfig.addFilter('ccJsonify', (obj) => obj ? JSON.stringify(obj) : null);
+	eleventyConfig.addNunjucksShortcode('ccConfigPath', (key) => paths[key] || '');
+	eleventyConfig.addNunjucksShortcode('ccPathPrefix', () => config.pathPrefix || '');
+	eleventyConfig.addNunjucksShortcode('ccInput', () => config.input || '');
 };
