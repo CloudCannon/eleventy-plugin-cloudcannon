@@ -51,7 +51,6 @@ module.exports = {
 	},
 
 	getCollectionsConfig: function (collections, cloudcannon) {
-		console.log('WHAT');
 		if (cloudcannon && cloudcannon.collections) {
 			return cloudcannon.collections; // User-defined collections
 		}
