@@ -7,9 +7,8 @@
     "test": "echo \"Error: no test specified\""
   },
   "files": [
-    "/.eleventy.js",
-    "/cloudcannon/info.11tydata.js",
-    "/cloudcannon/info.njk"
+    ".eleventy.js",
+    "cloudcannon/*"
   ],
   "repository": {
     "type": "git",
