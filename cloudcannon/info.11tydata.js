@@ -83,7 +83,7 @@ module.exports = {
 			topBasePaths.forEach((basePath) => {
 				// Multiple collections can share this basePath, but this should cover common use-cases
 				memo[topBasePaths.length === 1 ? key : basePath] = {
-					_path: basePath,
+					path: basePath,
 					output: isOutput
 				};
 			});
