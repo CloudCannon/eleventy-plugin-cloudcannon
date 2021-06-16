@@ -44,7 +44,7 @@ module.exports = function (eleventyConfig) {
 };
 ```
 
-If you are running this locally rather than on CloudCannon, copy the templates as well:
+Copy the templates as well:
 
 ```
 cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
@@ -74,27 +74,29 @@ The following is an empty template as an example.
   "timezone": "",
   "collections": {
     "projects": {
-      "_path": "",
+      "path": "",
       "name": "",
       "title": "",
       "output": false,
-      "_sort-key": "",
-      "_subtext-key": "",
-      "_image-key": "",
-      "_image-size": "",
-      "_singular-name": "",
-      "_singular-key": "",
-      "_disable-add": false,
+      "_sort_key": "",
+      "_subtext_key": "",
+      "_image_key": "",
+      "_image_size": "",
+      "_singular_name": "",
+      "_singular_key": "",
+      "_disable_add": false,
       "_icon": "",
-      "_add-options": []
+      "_enabled_editors": null,
+      "_add_options": []
     }
   },
-  "comments": {},
-  "input-options": {},
-  "editor": {},
-  "source-editor": {},
-  "array-structures": {},
-  "select-data": {}
+  "_comments": {},
+  "_options": {},
+  "_editor": {},
+  "_source_editor": {},
+  "_array_structures": {},
+  "_enabled_editors": null,
+  "_select_data": {}
 }
 ```
 
