@@ -8,7 +8,8 @@
   },
   "files": [
     "/.eleventy.js",
-    "/cloudcannon"
+    "/cloudcannon/info.11tydata.js",
+    "/cloudcannon/info.njk"
   ],
   "repository": {
     "type": "git",
