@@ -5,11 +5,11 @@ function isTopPath(basePath, index, basePaths) {
 }
 
 function isStaticPage(item) {
-	return !item.template._layoutKey && (!item.data.tags || !item.data.tags.length)
+	return !item.template._layoutKey && !item.data.tags?.length;
 }
 
 function isPage(item) {
-	return item.template._layoutKey && (!item.data.tags || !item.data.tags.length)
+	return item.template._layoutKey && !item.data.tags?.length;
 }
 
 function isUnlisted(item) {
@@ -41,17 +41,17 @@ module.exports = {
 	processItem: function (item, tag) {
 		return {
 			...item.template.frontMatter.data,
-			path: item.inputPath ? item.inputPath.replace('./', '') : '',
-			url: item.url || '',
+			path: item.inputPath?.replace('./', '') ?? '',
+			url: item.url ?? '',
 			collection: tag,
 			layout: item.template._layoutKey,
-			_unlisted: isUnlisted(item) || undefined,
+			_unlisted: isUnlisted(item) ?? undefined,
 			output: item.url !== false
 		};
 	},
 
 	getCollectionsConfig: function (collections, cloudcannon) {
-		if (cloudcannon && cloudcannon.collections) {
+		if (cloudcannon?.collections) {
 			return cloudcannon.collections; // User-defined collections
 		}
 
@@ -59,10 +59,10 @@ module.exports = {
 		const keys = Object.keys(otherCollections);
 
 		const collectionsMeta = all.reduce((memo, item) => {
-			const tag = (item.data.tags || [])[0];
+			const tag = item.data.tags?.[0];
 
 			if (tag) {
-				memo[tag] = memo[tag] || { basePaths: new Set(), outputOffset: 0 };
+				memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 				// Map tags to basePaths, items with same tags can exist in separate folders
 				memo[tag].basePaths.add(dirname(item.inputPath.replace('./', '')));
 				// Tracks how collection items are output
