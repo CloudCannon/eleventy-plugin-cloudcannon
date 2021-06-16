@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon/issues"
   },
-  "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme"
+  "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme",
+  "dependencies": {
+    "pkginfo": "^0.4.1"
+  }
 }

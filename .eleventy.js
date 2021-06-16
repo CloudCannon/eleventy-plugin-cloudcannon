@@ -1,3 +1,5 @@
+const pkginfo = require('pkginfo')(module, 'version');
+
 module.exports = function (eleventyConfig, config = {}) {
 	const paths = {
 		data: '_data',
@@ -10,4 +12,5 @@ module.exports = function (eleventyConfig, config = {}) {
 	eleventyConfig.addNunjucksShortcode('ccConfigPath', (key) => paths[key] || '');
 	eleventyConfig.addNunjucksShortcode('ccPathPrefix', () => config.pathPrefix || '');
 	eleventyConfig.addNunjucksShortcode('ccInput', () => config.input || '');
+	eleventyConfig.addNunjucksShortcode('ccVersion', () => module.exports.version);
 };

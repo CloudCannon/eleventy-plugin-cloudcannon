@@ -1,0 +1,78 @@
+---
+eleventyExcludeFromCollections: true
+permalink: /_cloudcannon/info.json
+---
+{
+	"time": "{{ build.date.toISOString() }}",
+	"cloudcannon": {
+		"name": "eleventy-plugin-cloudcannon",
+		"version": "{% ccVersion %}"
+	},
+	"generator": {
+		"name": "eleventy",
+		"version": "{{ pkg.dependencies['@11ty/eleventy'] }}",
+		"environment": "{{ environment }}",
+		"metadata": {
+			"markdown": "commonmark",
+			"commonmark": {}
+		}
+	},
+	"source": "{% ccInput %}",
+	{% if cloudcannon.timezone %}
+		"timezone": "{{ cloudcannon.timezone }}",
+	{% endif %}
+	"base-url": "{% ccPathPrefix %}",
+	"collections-config": {{ getCollectionsConfig(collections, cloudcannon) | ccJsonify | safe }},
+	"collections": {
+		{%- for tag, items in getCollections(collections) %}
+			"{{ tag }}": [
+				{% for item in items %}
+					{{ processItem(item, tag) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
+				{% endfor %}
+			]{{ '' if loop.last else ',' }}
+		{%- endfor %}
+	},
+	"pages": [
+		{%- for item in getPages(collections) %}
+			{{ processItem(item) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
+		{% endfor %}
+	],
+	"static-pages": [
+		{%- for item in getStaticPages(collections) %}
+			{{ processItem(item) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
+		{% endfor %}
+	],
+	{% if cloudcannon._comments %}
+		"_comments": {{ cloudcannon._comments | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._options %}
+		"_options": {{ cloudcannon._options | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._editor %}
+		"_editor": {{ cloudcannon._editor | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._source_editor %}
+		"_source_editor": {{ cloudcannon._source_editor | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._explore %}
+		"_explore": {{ cloudcannon._explore | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._array_structures %}
+		"_array_structures": {{ cloudcannon._array_structures | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._select_data %}
+		"_select_data": {{ cloudcannon._select_data | ccJsonify | safe }},
+	{% endif %}
+	{% if cloudcannon._enabled_editors %}
+		"_enabled_editors": {{ cloudcannon._enabled_editors | ccJsonify | safe }},
+	{% endif %}
+	"paths": {
+		{% if cloudcannon.uploads_dir %}
+			"uploads": "{{ cloudcannon.uploads_dir }}",
+		{% endif %}
+		"data": "{% ccConfigPath 'data' %}",
+		"collections": "",
+		"includes": "{% ccConfigPath 'includes' %}",
+		"layouts": "{% ccConfigPath 'layouts' %}"
+	}
+}

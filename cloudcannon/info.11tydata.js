@@ -1,13 +1,57 @@
-const path = require('path');
+const { dirname, basename } = require('path');
 
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
 
+function isStaticPage(item) {
+	return !item.template._layoutKey && (!item.data.tags || !item.data.tags.length)
+}
+
+function isPage(item) {
+	return item.template._layoutKey && (!item.data.tags || !item.data.tags.length)
+}
+
+function isUnlisted(item) {
+	if (item.data._unlisted === true) {
+		return true;
+	}
+
+	const parentFolder = basename(dirname(item.inputPath));
+	const filename = basename(item.inputPath);
+	return filename.startsWith(`${parentFolder}.`);
+}
+
 module.exports = {
 	environment: process.env.ELEVENTY_ENV,
 
-	getCollections: function (collections, cloudcannon) {
+	getStaticPages: function (collections) {
+		return collections.all.filter(isStaticPage);
+	},
+
+	getPages: function (collections) {
+		return collections.all.filter(isPage);
+	},
+
+	getCollections: function (collections) {
+		const { all, ...otherCollections } = collections;
+		return otherCollections;
+	},
+
+	processItem: function (item, tag) {
+		return {
+			...item.template.frontMatter.data,
+			path: item.inputPath ? item.inputPath.replace('./', '') : '',
+			url: item.url || '',
+			collection: tag,
+			layout: item.template._layoutKey,
+			_unlisted: isUnlisted(item) || undefined,
+			output: item.url !== false
+		};
+	},
+
+	getCollectionsConfig: function (collections, cloudcannon) {
+		console.log('WHAT');
 		if (cloudcannon && cloudcannon.collections) {
 			return cloudcannon.collections; // User-defined collections
 		}
@@ -21,7 +65,7 @@ module.exports = {
 			if (tag) {
 				memo[tag] = memo[tag] || { basePaths: new Set(), outputOffset: 0 };
 				// Map tags to basePaths, items with same tags can exist in separate folders
-				memo[tag].basePaths.add(path.dirname(item.inputPath.replace('./', '')));
+				memo[tag].basePaths.add(dirname(item.inputPath.replace('./', '')));
 				// Tracks how collection items are output
 				memo[tag].outputOffset += item.url === false ? -1 : 1;
 			}
