@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\""
   },
+  "files": [
+    "/.eleventy.js",
+    "/cloudcannon"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cloudcannon/eleventy-plugin-cloudcannon.git"
