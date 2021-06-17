@@ -2,6 +2,7 @@
 eleventyExcludeFromCollections: true
 permalink: /_cloudcannon/info.json
 ---
+{% set dataPath %}{% ccConfigPath 'data' %}{% endset %}
 {
 	"time": "{{ build.date.toISOString() }}",
 	"cloudcannon": {
@@ -22,7 +23,7 @@ permalink: /_cloudcannon/info.json
 		"timezone": "{{ cloudcannon.timezone }}",
 	{% endif %}
 	"base-url": "{% ccPathPrefix %}",
-	"collections-config": {{ getCollectionsConfig(collections, cloudcannon) | ccJsonify | safe }},
+	"collections-config": {{ getCollectionsConfig(collections, cloudcannon, dataPath) | ccJsonify | safe }},
 	"collections": {
 		{%- for tag, items in getCollections(collections) %}
 			"{{ tag }}": [
@@ -70,7 +71,7 @@ permalink: /_cloudcannon/info.json
 		{% if cloudcannon.uploads_dir %}
 			"uploads": "{{ cloudcannon.uploads_dir }}",
 		{% endif %}
-		"data": "{% ccConfigPath 'data' %}",
+		"data": {{ dataPath | ccJsonify | safe }},
 		"collections": "",
 		"includes": "{% ccConfigPath 'includes' %}",
 		"layouts": "{% ccConfigPath 'layouts' %}"

@@ -44,9 +44,13 @@ module.exports = function (eleventyConfig) {
 };
 ```
 
-Copy the templates as well:
+To ensure your site stays up to date with future plugin versions, add the following to your `_cloudcannon-prebuild.sh`:
 
 ```
+nvm use 14
+npm update eleventy-plugin-cloudcannon
+npm install
+rm -rf cloudcannon
 cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
 ```
 

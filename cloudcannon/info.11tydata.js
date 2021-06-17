@@ -41,16 +41,16 @@ module.exports = {
 	processItem: function (item, tag) {
 		return {
 			...item.template.frontMatter.data,
-			path: item.inputPath?.replace('./', '') ?? '',
-			url: item.url ?? '',
+			path: item.inputPath.replace('./', ''),
+			url: item.url || '',
 			collection: tag,
 			layout: item.template._layoutKey,
-			_unlisted: isUnlisted(item) ?? undefined,
+			_unlisted: isUnlisted(item),
 			output: item.url !== false
 		};
 	},
 
-	getCollectionsConfig: function (collections, cloudcannon) {
+	getCollectionsConfig: function (collections, cloudcannon, dataPath) {
 		if (cloudcannon?.collections) {
 			return cloudcannon.collections; // User-defined collections
 		}
@@ -77,8 +77,8 @@ module.exports = {
 			// Finds the top-most common basePaths to prevent sub-folders becoming separate entries
 			const topBasePaths = Array.from(collectionsMeta[key].basePaths).filter(isTopPath);
 
-			// Consider a collection output if more items are output than not
-			const isOutput = collectionsMeta[key].outputOffset > 0;
+			// Consider a collection output unless more items are not output
+			const isOutput = collectionsMeta[key].outputOffset >= 0;
 
 			topBasePaths.forEach((basePath) => {
 				// Multiple collections can share this basePath, but this should cover common use-cases
@@ -89,6 +89,6 @@ module.exports = {
 			});
 
 			return memo;
-		}, {});
+		}, dataPath ? { data: { path: dataPath, output: false } } : {});
 	}
 };

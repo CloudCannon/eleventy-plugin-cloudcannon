@@ -4,7 +4,7 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "jest"
   },
   "files": [
     ".eleventy.js",
@@ -26,5 +26,8 @@
   "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme",
   "dependencies": {
     "pkginfo": "^0.4.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.4"
   }
 }
