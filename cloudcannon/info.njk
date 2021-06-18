@@ -43,6 +43,7 @@ permalink: /_cloudcannon/info.json
 			{{ processItem(item) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
 		{% endfor %}
 	],
+	"data": {{ getData(cloudcannon) | ccJsonify | safe }},
 	{% if cloudcannon._comments %}
 		"_comments": {{ cloudcannon._comments | ccJsonify | safe }},
 	{% endif %}

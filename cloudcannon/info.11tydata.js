@@ -38,6 +38,21 @@ module.exports = {
 		return otherCollections;
 	},
 
+	getData: function (cloudcannon) {
+		if (!cloudcannon?.data) {
+			return {};
+		}
+
+		const { ctx } = this;
+		return Object.keys(cloudcannon.data).reduce((memo, key) => {
+			if (cloudcannon.data[key] === true) {
+				memo[key] = ctx[key] ?? {};
+			}
+
+			return memo;
+		}, {});
+	},
+
 	processItem: function (item, tag) {
 		return {
 			...item.template.frontMatter.data,

@@ -1,5 +1,13 @@
 const info = require('../cloudcannon/info.11tydata.js');
 
+// Simulates the context when running Eleventy
+const boundGetData = info.getData.bind({
+	ctx: {
+		things: ['a', 'b', 'c'],
+		nope: { hello: 'there' }
+	}
+});
+
 const collectionItem = {
 	inputPath: './staff/pete.html',
 	url: '/staff/pete/',
@@ -82,6 +90,25 @@ test('gets collections', () => {
   expect(info.getCollections(collections)).toEqual({
   	staff: [collectionItem]
   });
+});
+
+test('gets data', () => {
+	const cloudcannon = {
+		data: {
+			things: true,
+			stuff: true,
+			nope: false
+		}
+	};
+
+  expect(boundGetData(cloudcannon)).toEqual({
+		things: ['a', 'b', 'c'],
+		stuff: {}
+  });
+});
+
+test('get no data', () => {
+  expect(boundGetData()).toEqual({});
 });
 
 test('processes item', () => {
