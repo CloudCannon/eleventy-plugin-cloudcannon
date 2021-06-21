@@ -1,4 +1,5 @@
 const { dirname, basename } = require('path');
+const isEqual = require('lodash.isequal');
 
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
@@ -20,6 +21,17 @@ function isUnlisted(item) {
 	const parentFolder = basename(dirname(item.inputPath));
 	const filename = basename(item.inputPath);
 	return filename.startsWith(`${parentFolder}.`);
+}
+
+const IGNORED_ITEM_KEYS = {
+	pagination: true,
+	collections: true,
+	page: true
+};
+
+function isIgnoredItemKey(item, key) {
+	return IGNORED_ITEM_KEYS[key]
+		|| isEqual(item.template.templateData.globalData[key], item.data[key]);
 }
 
 module.exports = {
@@ -54,8 +66,16 @@ module.exports = {
 	},
 
 	processItem: function (item, tag) {
+		const combinedData = Object.keys(item.data).reduce((memo, key) => {
+			if (!isIgnoredItemKey(item, key)) {
+				memo[key] = item.data[key];
+			}
+
+			return memo;
+		}, {});
+
 		return {
-			...item.template.frontMatter.data,
+			...combinedData,
 			path: item.inputPath.replace('./', ''),
 			url: item.url || '',
 			collection: tag,
