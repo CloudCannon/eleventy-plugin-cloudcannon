@@ -89,6 +89,10 @@ module.exports = {
 
 		// Creates a collection entry for each top level basePath defined for a tag
 		return keys.reduce((memo, key) => {
+			if (!collectionsMeta[key]) {
+				return memo;
+			}
+
 			// Finds the top-most common basePaths to prevent sub-folders becoming separate entries
 			const topBasePaths = Array.from(collectionsMeta[key].basePaths).filter(isTopPath);
 
