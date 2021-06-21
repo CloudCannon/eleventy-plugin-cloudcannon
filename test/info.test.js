@@ -11,8 +11,19 @@ const boundGetData = info.getData.bind({
 const collectionItem = {
 	inputPath: './staff/pete.html',
 	url: '/staff/pete/',
-	template: { _layoutKey: 'abc' },
-	data: { tags: ['staff'] }
+	data: {
+		tags: ['staff', 'another'],
+		seo: { should: 'not be output' }
+	},
+	template: {
+		_layoutKey: 'abc',
+		templateData: {
+			globalData: {
+				cloudcannon: {},
+				seo: {}
+			}
+		}
+	}
 };
 
 const nonOutputCollectionItem = {
@@ -35,14 +46,15 @@ const staticPage = {
 };
 
 const page = {
-	data: { tags: [] },
+	data: { title: 'Hi there' },
 	inputPath: './page.html',
 	url: '/page/',
 	template: {
 		_layoutKey: 'abc',
-		frontMatter: {
-			data: {
-				title: 'Hi there'
+		templateData: {
+			globalData: {
+				cloudcannon: {},
+				seo: {}
 			}
 		}
 	}
@@ -50,7 +62,7 @@ const page = {
 
 const unlistedPage = {
 	...page,
-	data: { _unlisted: true }
+	data: { ...page.data, _unlisted: true }
 };
 
 const nonOutputPage = {
@@ -147,6 +159,7 @@ test('gets collections config', () => {
 test('gets complex collections config', () => {
 	const collections = {
 		all: [page, collectionItem, nonOutputCollectionItem, outsideCollectionItem, staticPage],
+		another: [collectionItem],
 		staff: [collectionItem, nonOutputCollectionItem, outsideCollectionItem]
 	};
 

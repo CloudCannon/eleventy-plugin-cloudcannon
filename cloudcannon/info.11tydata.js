@@ -31,7 +31,7 @@ const IGNORED_ITEM_KEYS = {
 
 function isIgnoredItemKey(item, key) {
 	return IGNORED_ITEM_KEYS[key]
-		|| isEqual(item.template.templateData.globalData[key], item.data[key]);
+		|| isEqual(item.template?.templateData?.globalData?.[key], item.data[key]);
 }
 
 module.exports = {
