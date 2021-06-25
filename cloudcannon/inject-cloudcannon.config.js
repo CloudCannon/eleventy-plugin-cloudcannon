@@ -6,7 +6,7 @@ module.exports = function (eleventyConfig, config = {}) {
 	let defaultConfig;
 
 	try {
-		defaultConfig = require('./default-eleventy.config.js');
+		defaultConfig = require('../default-eleventy.config.js');
 	} catch {
 		console.error('Failed to load default-eleventy.config.js');
 	}
