@@ -8,7 +8,6 @@
   },
   "files": [
     ".eleventy.js",
-    "inject-cloudcannon.config.js",
     "cloudcannon/*"
   ],
   "repository": {
