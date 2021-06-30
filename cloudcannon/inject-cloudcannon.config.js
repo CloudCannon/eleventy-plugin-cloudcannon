@@ -2,7 +2,7 @@ const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 // Intended for use with the CLI option: --config=inject-cloudcannon.config.js
 // Adds the cloudcannon plugin after running the renamed default config file
-module.exports = function (eleventyConfig, config = {}) {
+module.exports = function (eleventyConfig) {
 	let defaultConfig;
 
 	try {
@@ -11,14 +11,6 @@ module.exports = function (eleventyConfig, config = {}) {
 		console.error('Failed to load default-eleventy.config.js');
 	}
 
-	defaultConfig?.apply(this, arguments);
-
-	const paths = {
-		data: '_data',
-		includes: '_includes',
-		layouts: '_includes',
-		...(config.dir ?? {})
-	};
-
-	eleventyConfig.addPlugin(pluginCloudCannon);
+	const config = defaultConfig?.apply(this, arguments);
+	eleventyConfig.addPlugin(pluginCloudCannon, eleventyConfig.cloudcannonOptions ?? config);
 };

@@ -74,15 +74,23 @@ module.exports = {
 			return memo;
 		}, {});
 
-		return {
+		const processed = {
 			...combinedData,
-			path: item.inputPath.replace('./', ''),
+			path: item.inputPath.replace(/^\.\//, ''),
 			url: item.url || '',
 			collection: tag,
-			layout: item.template._layoutKey,
-			_unlisted: isUnlisted(item),
 			output: item.url !== false
 		};
+
+		if (item.template?._layoutKey) {
+			processed.layout = item.template._layoutKey;
+		}
+
+		if (isUnlisted(item)) {
+			processed._unlisted = true;
+		}
+
+		return processed;
 	},
 
 	getCollectionsConfig: function (collections, cloudcannon, dataPath) {

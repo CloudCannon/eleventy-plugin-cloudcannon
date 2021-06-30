@@ -7,31 +7,67 @@ An Eleventy (11ty) plugin that creates [CloudCannon](https://cloudcannon.com/) e
 
 ## Installation
 
+### CloudCannon
+
+By default, CloudCannon automatically injects this plugin before your site is built. You can
+disable this if you want to maintain the plugin versioning yourself or you experience issues.
+
+Disabling the automatic injection prevents the templates being copied. In order to retain this,
+you may wish to add the following to your `_cloudcannon-prebuild.sh`:
+
+```
+rm -rf cloudcannon
+cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
+```
+
+If you use custom paths for your site, pass them to the plugin in the `cloudcannonOptions` key
+within your `.eleventy.js` file:
+
+```
+module.exports = function (eleventyConfig) {
+  const config = {
+    pathPrefix: '/',
+    dir: {
+      input: '.',
+      data: '_my-custom-data',
+      layouts: '_layouts',
+      includes: '_my-includes'
+    }
+  };
+
+  eleventyConfig.cloudcannonOptions = config;
+  return config;
+};
+```
+
+### Manual
+
 Available on [npm](https://www.npmjs.com/package/eleventy-plugin-cloudcannon).
 
 ```
 npm install eleventy-plugin-cloudcannon --save
 ```
 
-Add the following `addPlugin` call to your `module.exports` function in the Eleventy config file
-(`.eleventy.js` by default):
+Add the following `addPlugin` call to the `module.exports` function in your `.eleventy.js` file:
 
 ```
 const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
-  eleventyConfig.addPlugin(pluginCloudCannon, options);
+  eleventyConfig.addPlugin(pluginCloudCannon);
 };
 ```
 
-If you set custom `dir` values for your site, pass them to the plugin as well:
+If you use custom paths for your site, pass them to the plugin as well:
 
 ```
 const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
   const config = {
+    pathPrefix: '/',
     dir: {
+      input: '.',
       data: '_my-custom-data',
       layouts: '_layouts',
       includes: '_my-includes'
@@ -39,34 +75,29 @@ module.exports = function (eleventyConfig) {
   };
 
   eleventyConfig.addPlugin(pluginCloudCannon, config);
-
   return config;
 };
 ```
 
-To ensure your site stays up to date with future plugin versions, add the following to your `_cloudcannon-prebuild.sh`:
-
-```
-nvm use 14
-npm update eleventy-plugin-cloudcannon
-npm install
-rm -rf cloudcannon
-cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
-```
-
 ## Options
 
-Matches what you set or return in your main config. All optional, including the parameter itself.
+The options are either set on the `eleventyConfig.cloudcannonOptions` key within your
+`.eleventy.js` file, or passed to the `addPlugin` call as a second argument if you are adding the
+plugin manually.
 
-| Key          | Type   | Default                                                          | Description                              |
-| ------------ | ------ | ---------------------------------------------------------------- | ---------------------------------------- |
-| `pathPrefix` | string | `''`                                                             | Custom pathPrefix setting your site uses |
-| `input`      | string | `'.'`                                                            | Custom input path your site uses         |
-| `dir`        | object | `{ data: '_data', includes: '_includes', layouts: '_includes' }` | Custom paths your site uses (if any)     |
+Should match the return value from your `.eleventy.js` (https://www.11ty.dev/docs/config/) file.
+All optional, including the argument itself.
+
+| Key                 | Type   | Default                                                                      | Description                         |
+| ------------------- | ------ | ---------------------------------------------------------------------------- | ----------------------------------- |
+| `pathPrefix`        | string | `'/'`                                                                        | `pathPrefix` setting your site uses |
+| `dir`               | object | `{ input: '.', data: '_data', includes: '_includes', layouts: '_includes' }` | Custom paths your site uses         |
+| `markdownItOptions` | object | `{ html: true }`                                                             | Options passed to markdown-it       |
 
 ## Data
 
-This plugin reads data from `cloudcannon` if available (defaults to `_data/cloudcannon.json` or `_data/cloudcannon.js`).
+This plugin reads data from `cloudcannon` if available (defaults to `_data/cloudcannon.json` or
+`_data/cloudcannon.js`).
 
 Details on each property here are listed in the relevant parts of the
 [CloudCannon documentation](https://cloudcannon.com/documentation/).
@@ -97,6 +128,7 @@ The following is an empty template as an example.
   "_comments": {},
   "_options": {},
   "_editor": {},
+  "_collection_groups": null,
   "_source_editor": {},
   "_array_structures": {},
   "_enabled_editors": null,

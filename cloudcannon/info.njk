@@ -2,7 +2,10 @@
 eleventyExcludeFromCollections: true
 permalink: /_cloudcannon/info.json
 ---
-{% set dataPath %}{% ccConfigPath 'data' %}{% endset %}
+{%- set inputPath %}{% ccPath 'input' %}{% endset -%}
+{%- set dataPath %}{% ccPath 'data' %}{% endset -%}
+{%- set includesPath %}{% ccPath 'includes' %}{% endset -%}
+{%- set layoutsPath %}{% ccPath 'layouts' %}{% endset -%}
 {
 	"time": "{{ build.date.toISOString() }}",
 	"cloudcannon": {
@@ -14,15 +17,15 @@ permalink: /_cloudcannon/info.json
 		"version": "{{ pkg.dependencies['@11ty/eleventy'] }}",
 		"environment": "{{ environment }}",
 		"metadata": {
-			"markdown": "commonmark",
-			"commonmark": {}
+			"markdown": "markdown-it",
+			"markdown-it": {% ccConfig 'markdownItOptions' %}
 		}
 	},
-	"source": "{% ccInput %}",
+	"source": {{ inputPath | ccJsonify | safe }},
 	{% if cloudcannon.timezone %}
 		"timezone": "{{ cloudcannon.timezone }}",
 	{% endif %}
-	"base-url": "{% ccPathPrefix %}",
+	"base-url": {% ccConfig 'pathPrefix' %},
 	"collections-config": {{ getCollectionsConfig(collections, cloudcannon, dataPath) | ccJsonify | safe }},
 	"collections": {
 		{%- for tag, items in getCollections(collections) %}
@@ -56,8 +59,8 @@ permalink: /_cloudcannon/info.json
 	{% if cloudcannon._source_editor %}
 		"_source_editor": {{ cloudcannon._source_editor | ccJsonify | safe }},
 	{% endif %}
-	{% if cloudcannon._explore %}
-		"_explore": {{ cloudcannon._explore | ccJsonify | safe }},
+	{% if cloudcannon._collection_groups %}
+		"_collection_groups": {{ cloudcannon._collection_groups | ccJsonify | safe }},
 	{% endif %}
 	{% if cloudcannon._array_structures %}
 		"_array_structures": {{ cloudcannon._array_structures | ccJsonify | safe }},
@@ -74,7 +77,7 @@ permalink: /_cloudcannon/info.json
 		{% endif %}
 		"data": {{ dataPath | ccJsonify | safe }},
 		"collections": "",
-		"includes": "{% ccConfigPath 'includes' %}",
-		"layouts": "{% ccConfigPath 'layouts' %}"
+		"includes": {{ includesPath | ccJsonify | safe }},
+		"layouts": {{ layoutsPath | ccJsonify | safe }}
 	}
 }

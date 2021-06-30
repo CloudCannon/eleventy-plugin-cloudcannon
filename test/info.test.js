@@ -76,7 +76,6 @@ const expectedProcessedPage = {
 	url: '/page/',
 	collection: 'tag',
 	layout: 'abc',
-	_unlisted: false,
 	output: true
 };
 
