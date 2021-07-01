@@ -9,6 +9,7 @@ module.exports = function (eleventyConfig, defaultConfig = {}) {
 		dir: {
 			input: defaultConfig.dir?.input ?? '.',
 			data: defaultConfig.dir?.data ?? '_data', // relative to input
+			pages: defaultConfig.dir?.pages ?? '', // relative to input
 			includes: defaultConfig.dir?.includes ?? '_includes', // relative to input
 			layouts: defaultConfig.dir?.layouts ?? '_includes', // relative to input
 		}

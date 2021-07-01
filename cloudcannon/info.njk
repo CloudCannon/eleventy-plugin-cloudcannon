@@ -3,6 +3,7 @@ eleventyExcludeFromCollections: true
 permalink: /_cloudcannon/info.json
 ---
 {%- set inputPath %}{% ccPath 'input' %}{% endset -%}
+{%- set pagesPath %}{% ccPath 'pages' %}{% endset -%}
 {%- set dataPath %}{% ccPath 'data' %}{% endset -%}
 {%- set includesPath %}{% ccPath 'includes' %}{% endset -%}
 {%- set layoutsPath %}{% ccPath 'layouts' %}{% endset -%}
@@ -75,6 +76,7 @@ permalink: /_cloudcannon/info.json
 		{% if cloudcannon.uploads_dir %}
 			"uploads": "{{ cloudcannon.uploads_dir }}",
 		{% endif %}
+		"pages": {{ pagesPath | ccJsonify | safe }},
 		"data": {{ dataPath | ccJsonify | safe }},
 		"collections": "",
 		"includes": {{ includesPath | ccJsonify | safe }},

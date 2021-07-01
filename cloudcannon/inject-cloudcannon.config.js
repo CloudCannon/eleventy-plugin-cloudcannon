@@ -13,4 +13,5 @@ module.exports = function (eleventyConfig) {
 
 	const config = defaultConfig?.apply(this, arguments);
 	eleventyConfig.addPlugin(pluginCloudCannon, eleventyConfig.cloudcannonOptions ?? config);
+	return config;
 };
