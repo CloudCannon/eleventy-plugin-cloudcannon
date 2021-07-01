@@ -15,7 +15,7 @@ disable this if you want to maintain the plugin versioning yourself or you exper
 Disabling the automatic injection prevents the templates being copied. In order to retain this,
 you may wish to add the following to your `_cloudcannon-prebuild.sh`:
 
-```
+```sh
 rm -rf cloudcannon
 cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
 ```
@@ -23,7 +23,7 @@ cp -R node_modules/eleventy-plugin-cloudcannon/cloudcannon .
 If you use custom paths for your site, pass them to the plugin in the `cloudcannonOptions` key
 within your `.eleventy.js` file:
 
-```
+```javascript
 module.exports = function (eleventyConfig) {
   const config = {
     pathPrefix: '/',
@@ -44,13 +44,13 @@ module.exports = function (eleventyConfig) {
 
 Available on [npm](https://www.npmjs.com/package/eleventy-plugin-cloudcannon).
 
-```
+```sh
 npm install eleventy-plugin-cloudcannon --save
 ```
 
 Add the following `addPlugin` call to the `module.exports` function in your `.eleventy.js` file:
 
-```
+```javascript
 const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
@@ -60,7 +60,7 @@ module.exports = function (eleventyConfig) {
 
 If you use custom paths for your site, pass them to the plugin as well:
 
-```
+```javascript
 const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
@@ -104,7 +104,7 @@ Details on each property here are listed in the relevant parts of the
 
 The following is an empty template as an example.
 
-```
+```json
 {
   "timezone": "",
   "collections": {
