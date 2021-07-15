@@ -8,7 +8,7 @@ permalink: /_cloudcannon/info.json
 {%- set includesPath %}{% ccPath 'includes' %}{% endset -%}
 {%- set layoutsPath %}{% ccPath 'layouts' %}{% endset -%}
 {
-	"time": "{{ build.date.toISOString() }}",
+	"time": "{% ccTime %}",
 	"cloudcannon": {
 		"name": "eleventy-plugin-cloudcannon",
 		"version": "{% ccVersion %}"

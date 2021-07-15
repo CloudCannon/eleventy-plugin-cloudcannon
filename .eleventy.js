@@ -1,5 +1,7 @@
 const pkginfo = require('pkginfo')(module, 'version');
+
 const version = module.exports.version;
+const time = new Date().toISOString();
 
 // defaultConfig should match the return value from https://www.11ty.dev/docs/config/
 module.exports = function (eleventyConfig, defaultConfig = {}) {
@@ -15,6 +17,7 @@ module.exports = function (eleventyConfig, defaultConfig = {}) {
 		}
 	}
 
+	eleventyConfig.addNunjucksShortcode('ccTime', () => time);
 	eleventyConfig.addNunjucksShortcode('ccPath', (key) => (config.dir[key] ?? '').replace(/^\.\/?/, ''));
 	eleventyConfig.addNunjucksShortcode('ccConfig', (key) => JSON.stringify(config[key] ?? ''));
 	eleventyConfig.addNunjucksShortcode('ccVersion', () => version);
