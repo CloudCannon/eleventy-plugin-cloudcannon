@@ -72,6 +72,9 @@ permalink: /_cloudcannon/info.json
 	{% if cloudcannon._enabled_editors %}
 		"_enabled_editors": {{ cloudcannon._enabled_editors | ccJsonify | safe }},
 	{% endif %}
+	{% if cloudcannon._instance_values %}
+		"_instance_values": {{ cloudcannon._instance_values | ccJsonify | safe }},
+	{% endif %}
 	"paths": {
 		{% if cloudcannon.uploads_dir %}
 			"uploads": "{{ cloudcannon.uploads_dir }}",
