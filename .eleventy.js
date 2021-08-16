@@ -1,4 +1,5 @@
 const pkginfo = require('pkginfo')(module, 'version');
+const safeStringify = require('fast-safe-stringify');
 
 const version = module.exports.version;
 const time = new Date().toISOString();
@@ -15,19 +16,21 @@ module.exports = function (eleventyConfig, defaultConfig = {}) {
 			includes: defaultConfig.dir?.includes ?? '_includes', // relative to input
 			layouts: defaultConfig.dir?.layouts ?? '_includes', // relative to input
 		}
-	}
+	};
+
+	const jsonify = (obj, fallback) => {
+		try {
+			return safeStringify(obj);
+		} catch (e) {
+			console.warn('eleventy-plugin-cloudcannon failed to jsonify:', e, obj);
+		}
+
+		return fallback;
+	};
 
 	eleventyConfig.addNunjucksShortcode('ccTime', () => time);
 	eleventyConfig.addNunjucksShortcode('ccPath', (key) => (config.dir[key] ?? '').replace(/^\.\/?/, ''));
-	eleventyConfig.addNunjucksShortcode('ccConfig', (key) => JSON.stringify(config[key] ?? ''));
 	eleventyConfig.addNunjucksShortcode('ccVersion', () => version);
-	eleventyConfig.addFilter('ccJsonify', (obj) => {
-		try {
-			return JSON.stringify(obj);
-		} catch {
-			console.warn('eleventy-plugin-cloudcannon: failed to JSON.stringify');
-		}
-
-		return null;
-	});
+	eleventyConfig.addNunjucksShortcode('ccConfig', (key) => jsonify(config[key] || ''));
+	eleventyConfig.addFilter('ccJsonify', jsonify);
 };

@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme",
   "dependencies": {
+    "fast-safe-stringify": "^2.0.8",
     "lodash.isequal": "^4.5.0",
     "pkginfo": "^0.4.1"
   },

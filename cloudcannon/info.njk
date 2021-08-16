@@ -31,23 +31,12 @@ layout: null
 	"collections-config": {{ getCollectionsConfig(collections, cloudcannon, dataPath) | ccJsonify | safe }},
 	"collections": {
 		{%- for tag, items in getCollections(collections) %}
-			"{{ tag }}": [
-				{% for item in items %}
-					{{ processItem(item, tag) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
-				{% endfor %}
-			]{{ '' if loop.last else ',' }}
+			{{ tag | ccJsonify | safe }}: {{ jsonifyItems(items, tag) | safe }}
+			{{ '' if loop.last else ',' }}
 		{%- endfor %}
 	},
-	"pages": [
-		{%- for item in getPages(collections) %}
-			{{ processItem(item) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
-		{% endfor %}
-	],
-	"static-pages": [
-		{%- for item in getStaticPages(collections) %}
-			{{ processItem(item) | ccJsonify | safe }}{{ '' if loop.last else ',' }}
-		{% endfor %}
-	],
+	"pages": {{ jsonifyItems(getPages(collections)) | safe }},
+	"static-pages": {{ jsonifyItems(getStaticPages(collections)) | safe }},
 	"data": {{ getData(cloudcannon) | ccJsonify | safe }},
 	{% if cloudcannon._comments %}
 		"_comments": {{ cloudcannon._comments | ccJsonify | safe }},

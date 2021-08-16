@@ -1,20 +1,29 @@
-const { dirname, basename } = require('path');
+const { dirname, basename, extname } = require('path');
 const isEqual = require('lodash.isequal');
+const safeStringify = require('fast-safe-stringify')
+
+const STATIC_PAGE_EXTENSIONS = {
+	'.html': true,
+	'.htm': true
+};
 
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
 
 function isStaticPage(item) {
-	return !item.template._layoutKey && !item.data.tags?.length;
+	return item.template
+		&& !item.template?._layoutKey
+		&& !item.data?.tags?.length
+		&& STATIC_PAGE_EXTENSIONS[extname(item.inputPath || '')];
 }
 
 function isPage(item) {
-	return item.template._layoutKey && !item.data.tags?.length;
+	return item.template?._layoutKey && !item.data?.tags?.length;
 }
 
 function isUnlisted(item) {
-	if (item.data._unlisted === true) {
+	if (item.data?._unlisted === true || !item.inputPath) {
 		return true;
 	}
 
@@ -31,7 +40,44 @@ const IGNORED_ITEM_KEYS = {
 
 function isIgnoredItemKey(item, key) {
 	return IGNORED_ITEM_KEYS[key]
-		|| isEqual(item.template?.templateData?.globalData?.[key], item.data[key]);
+		|| isEqual(item.template?.templateData?.globalData?.[key], item.data?.[key]);
+}
+
+function processItem(item, tag) {
+	if (!item.inputPath) {
+		return;
+	}
+
+	const data = item.data || {};
+
+	const combinedData = Object.keys(data).reduce((memo, key) => {
+		if (!isIgnoredItemKey(item, key)) {
+			memo[key] = data[key];
+		}
+
+		return memo;
+	}, {});
+
+	const processed = {
+		...combinedData,
+		path: item.inputPath.replace(/^\.\//, ''),
+		url: item.url || '',
+		output: item.url !== false
+	};
+
+	if (tag) {
+		processed.collection = tag;
+	}
+
+	if (item.template?._layoutKey) {
+		processed.layout = item.template?._layoutKey;
+	}
+
+	if (isUnlisted(item)) {
+		processed._unlisted = true;
+	}
+
+	return processed;
 }
 
 module.exports = {
@@ -65,33 +111,23 @@ module.exports = {
 		}, {});
 	},
 
-	processItem: function (item, tag) {
-		const combinedData = Object.keys(item.data).reduce((memo, key) => {
-			if (!isIgnoredItemKey(item, key)) {
-				memo[key] = item.data[key];
+	jsonifyItems: function (items, tag) {
+		const processedItems = items?.reduce?.((memo, item) => {
+			// Stringified individually to avoid one item breaking it
+			try {
+				const json = safeStringify(processItem(item, tag));
+				memo.push(json);
+			} catch (e) {
+				console.warn('eleventy-plugin-cloudcannon failed to jsonify item:', e);
 			}
 
 			return memo;
-		}, {});
+		}, []) || [];
 
-		const processed = {
-			...combinedData,
-			path: item.inputPath.replace(/^\.\//, ''),
-			url: item.url || '',
-			collection: tag,
-			output: item.url !== false
-		};
-
-		if (item.template?._layoutKey) {
-			processed.layout = item.template._layoutKey;
-		}
-
-		if (isUnlisted(item)) {
-			processed._unlisted = true;
-		}
-
-		return processed;
+		return `[${processedItems.join(',\n')}]`;
 	},
+
+	processItem: processItem, // TODO: Remove this after changing test references
 
 	getCollectionsConfig: function (collections, cloudcannon, dataPath) {
 		if (cloudcannon?.collections) {
@@ -102,9 +138,9 @@ module.exports = {
 		const keys = Object.keys(otherCollections);
 
 		const collectionsMeta = all.reduce((memo, item) => {
-			const tag = item.data.tags?.[0];
+			const tag = item.data?.tags?.[0];
 
-			if (tag) {
+			if (tag && item.inputPath) {
 				memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 				// Map tags to basePaths, items with same tags can exist in separate folders
 				memo[tag].basePaths.add(dirname(item.inputPath.replace('./', '')));
