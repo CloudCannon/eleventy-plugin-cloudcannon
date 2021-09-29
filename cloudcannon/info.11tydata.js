@@ -7,6 +7,17 @@ const STATIC_PAGE_EXTENSIONS = {
 	'.htm': true
 };
 
+function stripSource(path, source) {
+	const sourceNormalised = `${source}/`
+		.replace(/\/+/, '/')
+		.replace(/^\.\//, '');
+
+	return path
+		.replace(/\/+/, '/')
+		.replace(/^\.\//, '')
+		.replace(sourceNormalised, '');
+}
+
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
@@ -22,13 +33,14 @@ function isPage(item) {
 	return item.template?._layoutKey && !item.data?.tags?.length;
 }
 
-function isUnlisted(item) {
+function isUnlisted(item, source) {
 	if (item.data?._unlisted === true || !item.inputPath) {
 		return true;
 	}
 
-	const parentFolder = basename(dirname(item.inputPath));
-	const filename = basename(item.inputPath);
+	const inputPath = stripSource(item.inputPath, source);
+	const parentFolder = basename(dirname(inputPath));
+	const filename = basename(inputPath);
 	return filename.startsWith(`${parentFolder}.`);
 }
 
@@ -43,7 +55,7 @@ function isIgnoredItemKey(item, key) {
 		|| isEqual(item.template?.templateData?.globalData?.[key], item.data?.[key]);
 }
 
-function processItem(item, tag) {
+function processItem(item, tag, source) {
 	if (!item.inputPath) {
 		return;
 	}
@@ -60,7 +72,7 @@ function processItem(item, tag) {
 
 	const processed = {
 		...combinedData,
-		path: item.inputPath.replace(/^\.\//, ''),
+		path: stripSource(item.inputPath, source),
 		url: item.url || '',
 		output: item.url !== false
 	};
@@ -73,7 +85,7 @@ function processItem(item, tag) {
 		processed.layout = item.template?._layoutKey;
 	}
 
-	if (isUnlisted(item)) {
+	if (isUnlisted(item, source)) {
 		processed._unlisted = true;
 	}
 
@@ -115,7 +127,7 @@ module.exports = {
 		const processedItems = items?.reduce?.((memo, item) => {
 			// Stringified individually to avoid one item breaking it
 			try {
-				const json = safeStringify(processItem(item, tag));
+				const json = safeStringify(processItem(item, tag, this.ctx?.inputPath || '.'));
 				memo.push(json);
 			} catch (e) {
 				console.warn('eleventy-plugin-cloudcannon failed to jsonify item:', e);
@@ -143,7 +155,8 @@ module.exports = {
 			if (tag && item.inputPath) {
 				memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 				// Map tags to basePaths, items with same tags can exist in separate folders
-				memo[tag].basePaths.add(dirname(item.inputPath.replace('./', '')));
+				const inputPath = stripSource(item.inputPath, this.ctx?.inputPath || '.');
+				memo[tag].basePaths.add(dirname(inputPath));
 				// Tracks how collection items are output
 				memo[tag].outputOffset += item.url === false ? -1 : 1;
 			}
