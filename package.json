@@ -8,6 +8,7 @@
   },
   "files": [
     ".eleventy.js",
+    "src/*",
     "cloudcannon/*"
   ],
   "repository": {
