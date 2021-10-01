@@ -7,7 +7,7 @@ const input = process.env.CC_ELEVENTY_INPUT || '';
 module.exports = function (eleventyConfig, defaultConfig = {}) {
 	const config = {
 		pathPrefix: normalisePath(defaultConfig.pathPrefix || '/'),
-		markdownItOptions: defaultConfig.markdownOptions || { html: true },
+		markdownItOptions: defaultConfig.markdownItOptions || { html: true },
 		dir: {
 			input: normalisePath(input || defaultConfig.dir?.input || '.'),
 			pages: normalisePath(defaultConfig.dir?.pages || ''), // relative to input

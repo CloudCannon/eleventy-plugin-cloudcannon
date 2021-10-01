@@ -140,9 +140,11 @@ function getCollections(collectionsConfig, context, config) {
 			otherCollections.pages = pages;
 		}
 	}
+	return Object.keys(collectionsConfig).reduce((memo, collectionKey) => {
+		if (otherCollections[collectionKey]) {
+			memo[collectionKey] = jsonifyItems(otherCollections[collectionKey], collectionKey, config);
+		}
 
-	return Object.keys(otherCollections).reduce((memo, tag) => {
-		memo[tag] = jsonifyItems(otherCollections[tag], tag, config);
 		return memo;
 	}, {});
 }
