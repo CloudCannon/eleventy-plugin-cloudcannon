@@ -4,7 +4,9 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "release": "npx np",
+    "prerelease": "npx np --tag=next"
   },
   "files": [
     ".eleventy.js",
