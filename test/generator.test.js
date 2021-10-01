@@ -1,5 +1,5 @@
 const pkginfo = require('pkginfo')(module, 'version');
-const info = require('../src/generator.js');
+const generator = require('../src/generator.js');
 
 const version = module.exports.version || '';
 
@@ -103,15 +103,15 @@ const processedStaticPage = {
 // Tests
 
 test('is static page', () => {
-	expect(info.isStaticPage(staticPage)).toEqual(true);
-	expect(info.isStaticPage(page)).toBeFalsy();
-	expect(info.isStaticPage(collectionItem)).toBeFalsy();
+	expect(generator.isStaticPage(staticPage)).toEqual(true);
+	expect(generator.isStaticPage(page)).toBeFalsy();
+	expect(generator.isStaticPage(collectionItem)).toBeFalsy();
 });
 
 test('is page', () => {
-	expect(info.isPage(page)).toEqual(true);
-	expect(info.isPage(staticPage)).toBeFalsy();
-	expect(info.isPage(collectionItem)).toBeFalsy();
+	expect(generator.isPage(page)).toEqual(true);
+	expect(generator.isPage(staticPage)).toBeFalsy();
+	expect(generator.isPage(collectionItem)).toBeFalsy();
 });
 
 test('gets collections', () => {
@@ -127,7 +127,7 @@ test('gets collections', () => {
 		staff: { path: 'staff' }
 	}
 
-	expect(info.getCollections(collectionsConfig, context, config)).toEqual({
+	expect(generator.getCollections(collectionsConfig, context, config)).toEqual({
 		pages: [processedPage, processedStaticPage],
 		staff: [processedCollectionItem]
 	});
@@ -146,33 +146,33 @@ test('gets data', () => {
 		}
 	};
 
-	expect(info.getData(context)).toEqual({
+	expect(generator.getData(context)).toEqual({
 		things: ['a', 'b', 'c'],
 		stuff: {}
 	});
 });
 
 test('get no data', () => {
-	expect(info.getData({})).toEqual({});
+	expect(generator.getData({})).toEqual({});
 });
 
 test('processes item', () => {
-	expect(info.processItem(page, 'pages', '.')).toEqual(processedPage);
+	expect(generator.processItem(page, 'pages', '.')).toEqual(processedPage);
 });
 
 test('processes invalid item', () => {
-	expect(info.processItem({}, 'pages', '.')).toBeUndefined();
+	expect(generator.processItem({}, 'pages', '.')).toBeUndefined();
 });
 
 test('processes unlisted item', () => {
-	expect(info.processItem(unlistedPage, 'pages', '.')).toEqual({
+	expect(generator.processItem(unlistedPage, 'pages', '.')).toEqual({
 		...processedPage,
 		_unlisted: true
 	});
 });
 
 test('processes non output item', () => {
-	expect(info.processItem(nonOutputPage, 'pages', '.')).toEqual({
+	expect(generator.processItem(nonOutputPage, 'pages', '.')).toEqual({
 		...processedPage,
 		url: '',
 		output: false
@@ -215,18 +215,18 @@ test('gets generator', () => {
 		pkg: { dependencies: { '@11ty/eleventy': '1' } }
 	};
 
-	expect(info.getGenerator(context, config)).toEqual(processedGenerator);
+	expect(generator.getGenerator(context, config)).toEqual(processedGenerator);
 
 	const contextDev = {
 		pkg: { devDependencies: { '@11ty/eleventy': '2' } }
 	};
 
-	expect(info.getGenerator(contextDev, config)).toEqual({
+	expect(generator.getGenerator(contextDev, config)).toEqual({
 		...processedGenerator,
 		version: '2'
 	});
 
-	expect(info.getGenerator({}, config)).toEqual({
+	expect(generator.getGenerator({}, config)).toEqual({
 		...processedGenerator,
 		version: ''
 	});
@@ -244,8 +244,8 @@ test('gets paths', () => {
 		cloudcannon: { uploads_dir: 'assets/raw' }
 	};
 
-	expect(info.getPaths({}, config)).toEqual(processedPaths);
-	expect(info.getPaths(context, config)).toEqual({
+	expect(generator.getPaths({}, config)).toEqual(processedPaths);
+	expect(generator.getPaths(context, config)).toEqual({
 		...processedPaths,
 		uploads: 'assets/raw'
 	});
@@ -259,7 +259,7 @@ test('gets collections config', () => {
 		}
 	};
 
-	expect(info.getCollectionsConfig(context, config)).toEqual({
+	expect(generator.getCollectionsConfig(context, config)).toEqual({
 		pages: {
 			path: '',
 			output: true,
@@ -285,7 +285,7 @@ test('gets complex collections config', () => {
 		}
 	};
 
-	expect(info.getCollectionsConfig(context, config)).toEqual({
+	expect(generator.getCollectionsConfig(context, config)).toEqual({
 		'nested/authors': {
 			output: true,
 			path: 'nested/authors'
@@ -319,7 +319,7 @@ test('gets custom collections config', () => {
 		}
 	};
 
-	expect(info.getCollectionsConfig(context, config)).toEqual({
+	expect(generator.getCollectionsConfig(context, config)).toEqual({
 		anything: 'here'
 	});
 });
@@ -356,12 +356,15 @@ const processedInfo = {
 	generator: processedGenerator,
 	paths: processedPaths,
 	source: '.',
-	time: new Date().toISOString(),
+	time: null,
 	version: '0.0.2'
 };
 
 test('gets info', () => {
 	const context = {
+		pkg: {
+			dependencies: { '@11ty/eleventy': '1' }
+		},
 		collections: {
 			all: [page, collectionItem, staticPage],
 			staff: [collectionItem]
@@ -373,5 +376,9 @@ test('gets info', () => {
 		}
 	};
 
-	expect(info.getInfo(context, config)).toEqual(processedInfo);
+	const result = generator.getInfo(context, config);
+	expect({ ...result, time: null }).toEqual(processedInfo);
+
+	const time = result.time.substring(0, 10);
+	expect(time).toEqual(new Date().toISOString().substring(0, 10));
 });

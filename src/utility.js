@@ -1,7 +1,10 @@
 const safeStringify = require('fast-safe-stringify');
 
 function normalisePath(path) {
-	return path.replace(/\/+/, '/').replace(/^\.\//, '');
+	return path
+		.replace(/\/+/g, '/')
+		.replace(/^\.$/, '')
+		.replace(/^\.\//g, '');
 }
 
 function stripTopPath(path, topPath) {
