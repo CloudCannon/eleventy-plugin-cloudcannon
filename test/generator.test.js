@@ -160,6 +160,15 @@ test('processes item', () => {
 	expect(generator.processItem(page, 'pages', '.')).toEqual(processedPage);
 });
 
+test('processes item in custom source', () => {
+	const customPage = {
+		...page,
+		inputPath: './src/page.html'
+	};
+
+	expect(generator.processItem(customPage, 'pages', 'src')).toEqual(processedPage);
+});
+
 test('processes invalid item', () => {
 	expect(generator.processItem({}, 'pages', '.')).toBeUndefined();
 });

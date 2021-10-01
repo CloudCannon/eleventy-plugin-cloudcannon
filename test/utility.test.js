@@ -4,6 +4,7 @@ test('normalises path', () => {
 	expect(utility.normalisePath('./hello.txt')).toEqual('hello.txt');
 	expect(utility.normalisePath('.')).toEqual('');
 	expect(utility.normalisePath('./')).toEqual('');
+	expect(utility.normalisePath('src/')).toEqual('src/');
 	expect(utility.normalisePath('/abc//def')).toEqual('/abc/def');
 });
 

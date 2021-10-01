@@ -11,6 +11,10 @@ function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
 
+function getSourcePath(inputPath, source) {
+	return stripTopPath(normalisePath(inputPath), source).replace(/^\/+/, '');
+}
+
 function isStaticPage(item) {
 	return item.template
 		&& !item.template?._layoutKey
@@ -27,7 +31,7 @@ function isUnlisted(item, source) {
 		return true;
 	}
 
-	const inputPath = stripTopPath(normalisePath(item.inputPath), source);
+	const inputPath = getSourcePath(item.inputPath, source);
 	const parentFolder = basename(dirname(inputPath));
 	const filename = basename(inputPath);
 	return filename.startsWith(`${parentFolder}.`);
@@ -61,7 +65,7 @@ function processItem(item, tag, source) {
 
 	const processed = {
 		...combinedData,
-		path: stripTopPath(normalisePath(item.inputPath), source),
+		path: getSourcePath(item.inputPath, source),
 		url: item.url || '',
 		output: item.url !== false
 	};
@@ -116,7 +120,7 @@ function guessCollections(all, config) {
 		if (tag && item.inputPath) {
 			memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 			// Map tags to basePaths, items with same tags can exist in separate folders
-			const inputPath = stripTopPath(normalisePath(item.inputPath), config.dir.input);
+			const inputPath = getSourcePath(item.inputPath, config.dir.input);
 			memo[tag].basePaths.add(dirname(inputPath));
 			// Tracks how collection items are output
 			memo[tag].outputOffset += item.url === false ? -1 : 1;
