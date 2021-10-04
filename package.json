@@ -5,8 +5,8 @@
   "main": ".eleventy.js",
   "scripts": {
     "test": "jest",
-    "release": "npx np",
-    "prerelease": "npx np --tag=next"
+    "release:latest": "npx np",
+    "release:next": "npx np --tag=next"
   },
   "files": [
     ".eleventy.js",
