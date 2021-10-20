@@ -5,7 +5,8 @@ let defaultConfig;
 try {
 	defaultConfig = require('./default-eleventy.config.js');
 } catch (e) {
-	console.error('⚠️ Unable to require your config from eleventy-plugin-cloudcannon:', e);
+	console.error('⚠️ Unable to require your config from eleventy-plugin-cloudcannon.');
+	console.error(e);
 }
 
 // Used when the 'Manage eleventy-plugin-cloudcannon manually' option is disabled in CloudCannon.
