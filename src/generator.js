@@ -217,7 +217,7 @@ function getGenerator(context, config) {
 
 function getPaths(context, config) {
 	return {
-		uploads: join(config.dir.input, context.cloudcannon?.uploads_dir ?? 'uploads'),
+		uploads: context.cloudcannon?.uploads_dir ?? 'uploads',
 		data: config.dir.data,
 		collections: '',
 		layouts: config.dir.layouts
