@@ -16,6 +16,6 @@ module.exports = function (eleventyConfig, ...args) {
 	const config = defaultConfig?.apply?.(this, [eleventyConfig, ...args]) ?? {};
 	console.log('☑️ Processed default configuration for eleventy-plugin-cloudcannon');
 	eleventyConfig.addPlugin(pluginCloudCannon, eleventyConfig.cloudcannonOptions ?? config);
-	console.log('☑️ Finished eleventy-plugin-cloudcannon');
+	console.log('☑️ Added eleventy-plugin-cloudcannon');
 	return config;
 };
