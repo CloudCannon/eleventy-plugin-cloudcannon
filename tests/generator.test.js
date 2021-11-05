@@ -1,5 +1,6 @@
-const pkginfo = require('pkginfo')(module, 'version');
+const test = require('ava');
 const generator = require('../src/generator.js');
+require('pkginfo')(module, 'version');
 
 const version = module.exports.version || '';
 
@@ -102,19 +103,19 @@ const processedStaticPage = {
 // -----
 // Tests
 
-test('is static page', () => {
-	expect(generator.isStaticPage(staticPage)).toEqual(true);
-	expect(generator.isStaticPage(page)).toBeFalsy();
-	expect(generator.isStaticPage(collectionItem)).toBeFalsy();
+test('is static page', (t) => {
+	t.truthy(generator.isStaticPage(staticPage));
+	t.falsy(generator.isStaticPage(page));
+	t.falsy(generator.isStaticPage(collectionItem));
 });
 
-test('is page', () => {
-	expect(generator.isPage(page)).toEqual(true);
-	expect(generator.isPage(staticPage)).toBeFalsy();
-	expect(generator.isPage(collectionItem)).toBeFalsy();
+test('is page', (t) => {
+	t.truthy(generator.isPage(page));
+	t.falsy(generator.isPage(staticPage));
+	t.falsy(generator.isPage(collectionItem));
 });
 
-test('gets collections', () => {
+test('gets collections', (t) => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, staticPage],
@@ -127,13 +128,13 @@ test('gets collections', () => {
 		staff: { path: 'staff' }
 	}
 
-	expect(generator.getCollections(collectionsConfig, context, config)).toEqual({
+	t.deepEqual(generator.getCollections(collectionsConfig, context, config), {
 		pages: [processedPage, processedStaticPage],
 		staff: [processedCollectionItem]
 	});
 });
 
-test('gets data', () => {
+test('gets data', (t) => {
 	const context = {
 		things: ['a', 'b', 'c'],
 		nope: { hello: 'there' },
@@ -146,64 +147,47 @@ test('gets data', () => {
 		}
 	};
 
-	expect(generator.getData(context)).toEqual({
+	t.deepEqual(generator.getData(context), {
 		things: ['a', 'b', 'c'],
 		stuff: {}
 	});
 });
 
-test('get no data', () => {
-	expect(generator.getData({})).toEqual({});
+test('get no data', (t) => {
+	t.deepEqual(generator.getData({}), {});
 });
 
-test('processes item', () => {
-	expect(generator.processItem(page, 'pages', '.')).toEqual(processedPage);
+test('processes item', (t) => {
+	t.deepEqual(generator.processItem(page, 'pages', '.'), processedPage);
 });
 
-test('processes item in custom source', () => {
+test('processes item in custom source', (t) => {
 	const customPage = {
 		...page,
 		inputPath: './src/page.html'
 	};
 
-	expect(generator.processItem(customPage, 'pages', 'src')).toEqual(processedPage);
+	t.deepEqual(generator.processItem(customPage, 'pages', 'src'), processedPage);
 });
 
-test('processes invalid item', () => {
-	expect(generator.processItem({}, 'pages', '.')).toBeUndefined();
+test('processes invalid item', (t) => {
+	t.is(generator.processItem({}, 'pages', '.'), undefined);
 });
 
-test('processes unlisted item', () => {
-	expect(generator.processItem(unlistedPage, 'pages', '.')).toEqual({
+test('processes unlisted item', (t) => {
+	t.deepEqual(generator.processItem(unlistedPage, 'pages', '.'), {
 		...processedPage,
 		_unlisted: true
 	});
 });
 
-test('processes non output item', () => {
-	expect(generator.processItem(nonOutputPage, 'pages', '.')).toEqual({
+test('processes non output item', (t) => {
+	t.deepEqual(generator.processItem(nonOutputPage, 'pages', '.'), {
 		...processedPage,
 		url: '',
 		output: false
 	});
 });
-
-
-function getGenerator(context, config) {
-	const eleventyVersion = context.pkg.dependencies['@11ty/eleventy']
-		|| context.pkg.devDependencies['@11ty/eleventy']
-		|| '';
-
-	return {
-		name: 'eleventy',
-		version: eleventyVersion,
-		environment: environment || '',
-		metadata: {
-			markdown: 'markdown-it',
-			'markdown-it': config.markdownItOptions || {}
-		}
-	};
-}
 
 const processedGenerator = {
 	name: 'eleventy',
@@ -215,7 +199,7 @@ const processedGenerator = {
 	}
 };
 
-test('gets generator', () => {
+test('gets generator', (t) => {
 	const config = {
 		markdownItOptions: { html: true }
 	};
@@ -224,18 +208,18 @@ test('gets generator', () => {
 		pkg: { dependencies: { '@11ty/eleventy': '1' } }
 	};
 
-	expect(generator.getGenerator(context, config)).toEqual(processedGenerator);
+	t.deepEqual(generator.getGenerator(context, config), processedGenerator);
 
 	const contextDev = {
 		pkg: { devDependencies: { '@11ty/eleventy': '2' } }
 	};
 
-	expect(generator.getGenerator(contextDev, config)).toEqual({
+	t.deepEqual(generator.getGenerator(contextDev, config), {
 		...processedGenerator,
 		version: '2'
 	});
 
-	expect(generator.getGenerator({}, config)).toEqual({
+	t.deepEqual(generator.getGenerator({}, config), {
 		...processedGenerator,
 		version: ''
 	});
@@ -248,19 +232,19 @@ const processedPaths = {
 	layouts: '_includes'
 };
 
-test('gets paths', () => {
+test('gets paths', (t) => {
 	const context = {
 		cloudcannon: { uploads_dir: 'assets/raw' }
 	};
 
-	expect(generator.getPaths({}, config)).toEqual(processedPaths);
-	expect(generator.getPaths(context, config)).toEqual({
+	t.deepEqual(generator.getPaths({}, config), processedPaths);
+	t.deepEqual(generator.getPaths(context, config), {
 		...processedPaths,
 		uploads: 'assets/raw'
 	});
 });
 
-test('gets collections config', () => {
+test('gets collections config', (t) => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, staticPage],
@@ -268,7 +252,7 @@ test('gets collections config', () => {
 		}
 	};
 
-	expect(generator.getCollectionsConfig(context, config)).toEqual({
+	t.deepEqual(generator.getCollectionsConfig(context, config), {
 		pages: {
 			path: '',
 			output: true,
@@ -285,7 +269,7 @@ test('gets collections config', () => {
 	});
 });
 
-test('gets complex collections config', () => {
+test('gets complex collections config', (t) => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, nonOutputCollectionItem, outsideCollectionItem, staticPage],
@@ -294,7 +278,7 @@ test('gets complex collections config', () => {
 		}
 	};
 
-	expect(generator.getCollectionsConfig(context, config)).toEqual({
+	t.deepEqual(generator.getCollectionsConfig(context, config), {
 		'nested/authors': {
 			output: true,
 			path: 'nested/authors'
@@ -315,7 +299,7 @@ test('gets complex collections config', () => {
 	});
 });
 
-test('gets custom collections config', () => {
+test('gets custom collections config', (t) => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, staticPage],
@@ -328,7 +312,7 @@ test('gets custom collections config', () => {
 		}
 	};
 
-	expect(generator.getCollectionsConfig(context, config)).toEqual({
+	t.deepEqual(generator.getCollectionsConfig(context, config), {
 		anything: 'here'
 	});
 });
@@ -369,7 +353,7 @@ const processedInfo = {
 	version: '0.0.2'
 };
 
-test('gets info', () => {
+test('gets info', (t) => {
 	const context = {
 		pkg: {
 			dependencies: { '@11ty/eleventy': '1' }
@@ -386,8 +370,8 @@ test('gets info', () => {
 	};
 
 	const result = generator.getInfo(context, config);
-	expect({ ...result, time: null }).toEqual(processedInfo);
+	t.deepEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);
-	expect(time).toEqual(new Date().toISOString().substring(0, 10));
+	t.is(time, new Date().toISOString().substring(0, 10));
 });

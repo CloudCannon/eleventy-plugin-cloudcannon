@@ -1,8 +1,7 @@
-const pkginfo = require('pkginfo')(module, 'version');
-const safeStringify = require('fast-safe-stringify');
-const { dirname, basename, extname, join } = require('path');
+const { dirname, basename, extname } = require('path');
 const isEqual = require('lodash.isequal');
 const { normalisePath, stripTopPath, stringifyJson } = require('./utility.js');
+require('pkginfo')(module, 'version');
 
 const environment = process.env.ELEVENTY_ENV || '';
 const version = module.exports.version || '';

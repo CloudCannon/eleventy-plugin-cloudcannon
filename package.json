@@ -4,7 +4,10 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "jest",
+    "test": "ava",
+    "test:watch": "ava --watch --verbose",
+    "test:coverage": "c8 --all ava",
+    "lint": "eslint src",
     "release:latest": "npx np",
     "release:next": "npx np --tag=next"
   },
@@ -28,11 +31,13 @@
   },
   "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme",
   "dependencies": {
-    "fast-safe-stringify": "^2.0.8",
+    "fast-safe-stringify": "^2.1.1",
     "lodash.isequal": "^4.5.0",
     "pkginfo": "^0.4.1"
   },
   "devDependencies": {
-    "jest": "^27.0.4"
+    "eslint": "^8.1.0",
+    "ava": "^3.15.0",
+    "c8": "^7.8.0"
   }
 }

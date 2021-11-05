@@ -13,17 +13,18 @@ function stripTopPath(path, topPath) {
 }
 
 function replacer(key, value) {
-	const isPage = typeof value === 'object'
-		&& value?.hasOwnProperty('template')
-		&& value?.hasOwnProperty('inputPath')
-		&& value?.hasOwnProperty('fileSlug')
-		&& value?.hasOwnProperty('filePathStem')
-		&& value?.hasOwnProperty('data')
-		&& value?.hasOwnProperty('date')
-		&& value?.hasOwnProperty('outputPath')
-		&& value?.hasOwnProperty('url')
-		&& value?.hasOwnProperty('templateContent')
-		&& value?.hasOwnProperty('_templateContent');
+	const isPage = value
+		&& typeof value === 'object'
+		&& Object.prototype.hasOwnProperty.call(value, 'template')
+		&& Object.prototype.hasOwnProperty.call(value, 'inputPath')
+		&& Object.prototype.hasOwnProperty.call(value, 'fileSlug')
+		&& Object.prototype.hasOwnProperty.call(value, 'filePathStem')
+		&& Object.prototype.hasOwnProperty.call(value, 'data')
+		&& Object.prototype.hasOwnProperty.call(value, 'date')
+		&& Object.prototype.hasOwnProperty.call(value, 'outputPath')
+		&& Object.prototype.hasOwnProperty.call(value, 'url')
+		&& Object.prototype.hasOwnProperty.call(value, 'templateContent')
+		&& Object.prototype.hasOwnProperty.call(value, '_templateContent');
 
 	if (isPage) {
 		return '[FILTERED]';
