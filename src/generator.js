@@ -1,10 +1,14 @@
 const { dirname, basename, extname } = require('path');
 const isEqual = require('lodash.isequal');
 const { normalisePath, stripTopPath, stringifyJson } = require('./utility.js');
-require('pkginfo')(module, 'version');
+require('pkginfo')(module, 'name', 'version');
 
 const environment = process.env.ELEVENTY_ENV || '';
-const version = module.exports.version || '';
+
+const cloudcannon = {
+	name: module.exports.name,
+	version: module.exports.version
+};
 
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
@@ -85,9 +89,10 @@ function processItem(item, tag, source) {
 }
 
 // Stringified individually to avoid one item breaking it
+// TODO: Find a way around this redundant process
 function jsonifyItems(items, tag, config) {
 	const processedItems = items?.reduce?.((memo, item) => {
-		const processed = processItem(item, tag, config.dir.input);
+		const processed = processItem(item, tag, config.source);
 		const stringified = stringifyJson(processed);
 
 		if (stringified !== undefined) {
@@ -100,11 +105,11 @@ function jsonifyItems(items, tag, config) {
 	return JSON.parse(`[${processedItems.join(',\n')}]`);
 }
 
-function getData(context) {
-	const data = context.cloudcannon?.data || {};
+function getData(context, config) {
+	const dataConfig = config.data_config;
 
-	return Object.keys(data).reduce((memo, key) => {
-		if (data[key] === true) {
+	return Object.keys(dataConfig).reduce((memo, key) => {
+		if (dataConfig[key] === true) {
 			memo[key] = context[key] ?? {};
 		}
 
@@ -119,7 +124,7 @@ function guessCollections(all, config) {
 		if (tag && item.inputPath) {
 			memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 			// Map tags to basePaths, items with same tags can exist in separate folders
-			const inputPath = getSourcePath(item.inputPath, config.dir.input);
+			const inputPath = getSourcePath(item.inputPath, config.source);
 			memo[tag].basePaths.add(dirname(inputPath));
 			// Tracks how collection items are output
 			memo[tag].outputOffset += item.url === false ? -1 : 1;
@@ -133,33 +138,30 @@ function getCollections(collectionsConfig, context, config) {
 	const { all, ...otherCollections } = context.collections;
 
 	if (!otherCollections.pages) {
-		const pages = all.filter((item) => isPage(item) || isStaticPage(item));
-
-		if (pages.length) {
-			otherCollections.pages = pages;
-		}
+		otherCollections.pages = all.filter((item) => isPage(item) || isStaticPage(item));
 	}
-	return Object.keys(collectionsConfig).reduce((memo, collectionKey) => {
-		if (otherCollections[collectionKey]) {
-			memo[collectionKey] = jsonifyItems(otherCollections[collectionKey], collectionKey, config);
-		}
 
+	return Object.keys(collectionsConfig).reduce((memo, collectionKey) => {
+		memo[collectionKey] = jsonifyItems(otherCollections[collectionKey], collectionKey, config);
 		return memo;
 	}, {});
 }
 
 function getCollectionsConfig(context, config) {
-	if (context.cloudcannon?.collections) {
-		return context.cloudcannon.collections; // User-defined collections
+	if (config.collections_config_override) {
+		return config.collections_config; // User-defined collections
 	}
 
 	const { all, ...otherCollections } = context.collections;
 	const guessedCollections = guessCollections(all, config);
+
 	const collectionsConfig = {
 		data: {
-			path: config.dir.data,
-			output: false
-		}
+			path: config.paths.data,
+			output: false,
+			...config.collections_config.data
+		},
+		...config.collections_config
 	};
 
 	// Creates a collection config entry for each top level basePath defined for a tag
@@ -176,29 +178,30 @@ function getCollectionsConfig(context, config) {
 
 		topBasePaths.forEach((basePath) => {
 			// Multiple collections can share this basePath, but this should cover common use-cases
-			collectionsConfig[topBasePaths.length === 1 ? key : basePath] = {
+			const collectionKey = topBasePaths.length === 1 ? key : basePath;
+			collectionsConfig[collectionKey] = {
 				path: basePath,
-				output: isOutput
+				output: isOutput,
+				...collectionsConfig[collectionKey]
 			};
 		});
 	});
 
-	const needsPages = !collectionsConfig.pages
-		&& all.some((item) => isPage(item) || isStaticPage(item));
-
-	if (needsPages) {
+	const hasPages = all.some((item) => isPage(item) || isStaticPage(item));
+	if (hasPages) {
 		// Add collection for pages without collection
 		collectionsConfig.pages = {
-			path: config.dir.pages || '',
+			path: config.paths.pages || '',
 			output: true,
-			filter: 'strict'
+			filter: 'strict',
+			...collectionsConfig.pages
 		};
 	}
 
 	return collectionsConfig;
 }
 
-function getGenerator(context, config) {
+function getGenerator(context, config, options) {
 	const eleventyVersion = context.pkg?.dependencies?.['@11ty/eleventy']
 		|| context.pkg?.devDependencies?.['@11ty/eleventy']
 		|| '';
@@ -209,39 +212,24 @@ function getGenerator(context, config) {
 		environment: environment || '',
 		metadata: {
 			markdown: 'markdown-it',
-			'markdown-it': config.markdownItOptions || { html: true }
+			'markdown-it': options.markdownItOptions || { html: true }
 		}
 	};
 }
 
-function getPaths(context, config) {
-	return {
-		uploads: context.cloudcannon?.uploads_dir ?? 'uploads',
-		data: config.dir.data,
-		collections: '',
-		layouts: config.dir.layouts
-	};
-}
-
-function getInfo(context, config) {
+function getInfo(context, config, options) {
 	const collectionsConfig = getCollectionsConfig(context, config);
 	const collections = getCollections(collectionsConfig, context, config);
 
 	return {
-		...context.cloudcannon,
-		'base-url': (config.pathPrefix === '/' ? '' : config.pathPrefix) || '',
-		cloudcannon: {
-			name: 'eleventy-plugin-cloudcannon',
-			version: version
-		},
+		...config,
+		cloudcannon: cloudcannon,
 		collections: collections,
-		'collections-config': collectionsConfig,
-		data: getData(context),
-		generator: getGenerator(context, config),
-		paths: getPaths(context, config),
-		source: config.dir.input,
+		collections_config: collectionsConfig,
+		data: getData(context, config),
+		generator: getGenerator(context, config, options),
 		time: new Date().toISOString(),
-		version: '0.0.2' // schema version
+		version: '0.0.3' // schema version
 	};
 }
 
@@ -258,6 +246,5 @@ module.exports = {
 	getCollections,
 	getCollectionsConfig,
 	getGenerator,
-	getPaths,
 	getInfo
 };

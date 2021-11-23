@@ -23,8 +23,8 @@ to maintain the plugin versioning manually.
 
 If you use custom paths for your site, you'll need to pass them to the plugin, either one of:
 
-- Setting `eleventyConfig.cloudcannonOptions`
 - Returning from `.eleventy.js`
+- Setting `eleventyConfig.cloudcannonOptions`
 
 ```javascript
 module.exports = function (eleventyConfig) {
@@ -41,10 +41,10 @@ module.exports = function (eleventyConfig) {
     }
   };
 
-  // Plugin looks here for plugin options
+  // Either plugin looks here for plugin options
   eleventyConfig.cloudcannonOptions = config;
 
-  // Plugin also looks at what you return for plugin options
+  // Or plugin looks at what you return for plugin options
   return config;
 };
 ```

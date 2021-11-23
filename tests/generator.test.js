@@ -321,7 +321,7 @@ const processedInfo = {
 	_select_data: {
 		shrutes: ['Dwight', 'Mose']
 	},
-	'base-url': '',
+	base_url: '',
 	cloudcannon: {
 		name: 'eleventy-plugin-cloudcannon',
 		version: version
@@ -330,7 +330,7 @@ const processedInfo = {
 		pages: [processedPage, processedStaticPage],
 		staff: [processedCollectionItem]
 	},
-	'collections-config': {
+	collections_config: {
 		pages: {
 			path: '',
 			output: true,
@@ -350,7 +350,7 @@ const processedInfo = {
 	paths: processedPaths,
 	source: '.',
 	time: null,
-	version: '0.0.2'
+	version: '0.0.3'
 };
 
 test('gets info', (t) => {
