@@ -159,7 +159,7 @@ function getCollectionsConfig(context, config) {
 		data: {
 			path: config.paths.data,
 			output: false,
-			...config.collections_config.data
+			...config.collections_config?.data
 		},
 		...config.collections_config
 	};

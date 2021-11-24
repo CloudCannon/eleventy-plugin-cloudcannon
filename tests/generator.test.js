@@ -348,7 +348,7 @@ const processedInfo = {
 	data: {},
 	generator: processedGenerator,
 	paths: processedPaths,
-	source: '.',
+	source: '',
 	time: null,
 	version: '0.0.3'
 };

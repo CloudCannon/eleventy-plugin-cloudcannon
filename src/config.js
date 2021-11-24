@@ -1,10 +1,10 @@
-import { relative } from 'path';
-import { cosmiconfig } from 'cosmiconfig';
-import chalk from 'chalk';
+const { relative } = require('path');
+const { cosmiconfigSync } = require('cosmiconfig');
+const chalk = require('chalk');
 
-async function readFile(configPath) {
+function readFileSync(configPath) {
 	const moduleName = 'cloudcannon';
-	const explorer = cosmiconfig(moduleName, {
+	const explorerSync = cosmiconfigSync(moduleName, {
 		searchPlaces: [
 			`${moduleName}.config.json`,
 			`${moduleName}.config.yaml`,
@@ -16,8 +16,8 @@ async function readFile(configPath) {
 
 	try {
 		const config = configPath
-			? await explorer.load(configPath)
-			: await explorer.search();
+			? explorerSync.load(configPath)
+			: explorerSync.search();
 
 		if (config) {
 			const relativeConfigPath = relative(process.cwd(), config.filepath);
@@ -38,54 +38,67 @@ async function readFile(configPath) {
 	return false;
 }
 
-function getLegacyCollectionsConfig(legacy) {
-	const collections = legacy.collections || {};
-
-	return Object.keys(collections).reduce((memo, key) => {
-		const value = collections[key];
-
-		const collectionConfig = {
-			...value,
-			sort_key: value.sort_key ?? value._sort_key,
-			subtext_key: value.subtext_key ?? value._subtext_key,
-			image_key: value.image_key ?? value._image_key,
-			image_size: value.image_size ?? value._image_size,
-			singular_name: value.singular_name ?? value._singular_name,
-			singular_key: value.singular_key ?? value._singular_key,
-			disable_add: value.disable_add ?? value._disable_add,
-			icon: value.icon ?? value._icon,
-			add_options: value.add_options ?? value._add_options
-		};
-
-		return { ...memo, [key]: collectionConfig };
-	}, {});
+function rewriteKey(object, oldKey, newKey) {
+	if (object[oldKey] && !object[newKey]) {
+		object[newKey] = object[oldKey];
+		delete object[oldKey];
+	}
 }
 
-function readConfig(context, options) {
+function getLegacyConfig(context) {
 	const legacy = context.cloudcannon || {};
-	const file = readFile() || {};
+	rewriteKey(legacy, 'data', 'data_config');
+
+	if (legacy.collections) {
+		legacy.collections = Object.keys(legacy.collections).reduce((memo, key) => {
+			const collectionConfig = { ...legacy.collections[key] };
+
+			rewriteKey(collectionConfig, '_sort_key', 'sort_key');
+			rewriteKey(collectionConfig, '_subtext_key', 'subtext_key');
+			rewriteKey(collectionConfig, '_image_key', 'image_key');
+			rewriteKey(collectionConfig, '_image_size', 'image_size');
+			rewriteKey(collectionConfig, '_singular_name', 'singular_name');
+			rewriteKey(collectionConfig, '_singular_key', 'singular_key');
+			rewriteKey(collectionConfig, '_disable_add', 'disable_add');
+			rewriteKey(collectionConfig, '_icon', 'icon');
+			rewriteKey(collectionConfig, '_add_options', 'add_options');
+
+			return { ...memo, [key]: collectionConfig };
+		}, {});
+
+		rewriteKey(legacy, 'collections', 'collections_config');
+	}
+
+	return legacy;
+}
+
+function readConfig(context, options = {}) {
+	const legacy = getLegacyConfig(context);
+	const file = readFileSync() || {};
 
 	const baseUrl = file.base_url || options.pathPrefix || '';
 
-	return {
+	const config = {
 		...legacy,
 		...file,
 		base_url: baseUrl === '/' ? '' : baseUrl,
-		data_config: file.data_config ?? legacy.data,
-		collections_config: file.collections_config ?? getLegacyCollectionsConfig(legacy),
-		collection_groups: file.collection_groups ?? legacy._collection_groups,
-		editor: file.editor ?? legacy._editor,
-		source_editor: file.source_editor ?? legacy._source_editor,
-		source: file.source || options.dir.input || '',
+		source: file.source || options.dir?.input || '',
 		paths: {
 			...file.paths,
 			static: file.paths?.static || '',
 			uploads: (file.paths?.uploads ?? legacy.uploads_dir) || 'uploads',
-			data: file.paths?.data || options.dir.data || '_data',
+			data: file.paths?.data || options.dir?.data || '_data',
 			collections: '',
-			layouts: file.paths?.layouts || options.dir.layouts || '_includes'
+			pages: file.paths?.pages || options.dir?.pages || '',
+			layouts: file.paths?.layouts || options.dir?.layouts || '_includes'
 		}
 	};
+
+	rewriteKey(config, '_source_editor', 'source_editor');
+	rewriteKey(config, '_editor', 'editor');
+	rewriteKey(config, '_collection_groups', 'collection_groups');
+
+	return config;
 }
 
 module.exports = {
