@@ -17,24 +17,24 @@ function getSourcePath(inputPath, source) {
 }
 
 function replacer(key, value) {
-	const isPage = value
-		&& typeof value === 'object'
-		&& Object.prototype.hasOwnProperty.call(value, 'template')
-		&& Object.prototype.hasOwnProperty.call(value, 'inputPath')
-		&& Object.prototype.hasOwnProperty.call(value, 'fileSlug')
-		&& Object.prototype.hasOwnProperty.call(value, 'filePathStem')
-		&& Object.prototype.hasOwnProperty.call(value, 'data')
-		&& Object.prototype.hasOwnProperty.call(value, 'date')
-		&& Object.prototype.hasOwnProperty.call(value, 'outputPath')
-		&& Object.prototype.hasOwnProperty.call(value, 'url')
-		&& Object.prototype.hasOwnProperty.call(value, 'templateContent')
-		&& Object.prototype.hasOwnProperty.call(value, '_templateContent');
+	const isNotPage = !value
+		|| typeof value !== 'object'
+		|| !Object.prototype.hasOwnProperty.call(value, 'template')
+		|| !Object.prototype.hasOwnProperty.call(value, 'inputPath')
+		|| !Object.prototype.hasOwnProperty.call(value, 'fileSlug')
+		|| !Object.prototype.hasOwnProperty.call(value, 'filePathStem')
+		|| !Object.prototype.hasOwnProperty.call(value, 'data')
+		|| !Object.prototype.hasOwnProperty.call(value, 'date')
+		|| !Object.prototype.hasOwnProperty.call(value, 'outputPath')
+		|| !Object.prototype.hasOwnProperty.call(value, 'url')
+		|| !Object.prototype.hasOwnProperty.call(value, 'templateContent')
+		|| !Object.prototype.hasOwnProperty.call(value, '_templateContent');
 
-	if (isPage) {
-		return '[FILTERED]';
+	if (isNotPage) {
+		return value;
 	}
 
-	return value;
+	return '[FILTERED]';
 }
 
 const stringifyJson = (obj, fallback) => {

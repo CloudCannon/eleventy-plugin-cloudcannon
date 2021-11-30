@@ -1,11 +1,28 @@
 {
 	"timezone": "Etc/UTC",
-	"_select_data": {
-		"call_to_actions": [
-			"Contact",
-			"Blog",
-			"Map"
-		]
+	"_inputs": {
+		"layout": {
+			"hidden": "true"
+		}
+	},
+	"collections_config": {
+		"authors": {
+			"path": "authors",
+			"output": false,
+			"auto_discovered": false,
+			"name": "The Authors"
+		},
+		"posts": {
+			"path": "posts",
+			"output": true,
+			"auto_discovered": true
+		},
+		"pages": {
+			"path": "",
+			"output": true,
+			"filter": "strict",
+			"auto_discovered": true
+		}
 	},
 	"base_url": "",
 	"source": "",
@@ -22,117 +39,85 @@
 		"version": "0.0.21"
 	},
 	"collections": {
-		"posts": [
-			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
-				"tags": [
-					"posts",
-					"Business"
-				],
-				"permalink": "/posts/{{ page.fileSlug }}/",
-				"background_image_path": "/uploads/building.jpg",
-				"large_header": false,
-				"title": "Business Mergers",
-				"date": "2016-08-10T00:00:00.000Z",
-				"authorStaffMember": "jane-doe",
-				"image": "https://unsplash.it/600/450?image=737&a=.png",
-				"path": "posts/business-mergers.md",
-				"url": "/posts/business-mergers/",
-				"output": true,
-				"collection": "posts"
-			},
-			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
-				"tags": [
-					"posts",
-					"Property"
-				],
-				"permalink": "/posts/{{ page.fileSlug }}/",
-				"background_image_path": "/uploads/building.jpg",
-				"large_header": false,
-				"title": "Real Estate Flipping",
-				"date": "2016-11-11T00:00:00.000Z",
-				"authorStaffMember": "john-doe",
-				"image": "https://unsplash.it/600/450?image=448&a=.png",
-				"path": "posts/real-estate-flipping.md",
-				"url": "/posts/real-estate-flipping/",
-				"output": true,
-				"collection": "posts"
-			}
-		],
-		"staffMembers": [
+		"authors": [
 			{
 				"tags": [
-					"staffMembers"
+					"authors"
 				],
 				"permalink": false,
 				"name": "Jane Doe",
-				"image": "https://placekitten.com/440/440?a=.png",
-				"description": "Jane has 19 years of experience in law, and specialises in property and business.",
-				"credentials": "LLB",
-				"phone_extension": "02",
-				"path": "staff-members/jane-doe.md",
+				"description": "Tall",
+				"path": "authors/jane-doe.md",
 				"url": "",
 				"output": false,
-				"collection": "staffMembers"
+				"collection": "authors"
 			},
 			{
 				"tags": [
-					"staffMembers"
+					"authors"
 				],
 				"permalink": false,
 				"name": "John Doe",
-				"image": "https://placebear.com/440/440?a=.png",
-				"description": "With an interest in employment law, John works tirelessly to improve workplaces.",
-				"credentials": "LLB",
-				"phone_extension": "11",
-				"path": "staff-members/john-doe.md",
+				"description": "Very tall",
+				"path": "authors/john-doe.md",
 				"url": "",
 				"output": false,
-				"collection": "staffMembers"
+				"collection": "authors"
+			}
+		],
+		"posts": [
+			{
+				"layout": "default.njk",
+				"tags": [
+					"posts"
+				],
+				"permalink": "/posts/{{ page.fileSlug }}/",
+				"title": "Wicked cool",
+				"date": "2021-12-11T00:00:00.000Z",
+				"author": "/authors/john-doe.md",
+				"authorItem": "[FILTERED]",
+				"path": "posts/wicked-cool.md",
+				"url": "/posts/wicked-cool/",
+				"output": true,
+				"collection": "posts"
 			}
 		],
 		"pages": [
 			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
+				"layout": "default.njk",
 				"permalink": "/{{ page.fileSlug }}/",
 				"title": "About",
-				"call_to_action": "Contact",
-				"large_header": false,
-				"show_in_navigation": true,
-				"navigation_order": 1,
+				"description": "All about us!",
 				"path": "pages/about.njk",
 				"url": "/about/",
 				"output": true,
 				"collection": "pages"
 			},
 			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
+				"layout": "default.njk",
+				"permalink": "/blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}",
+				"title": "Blog",
+				"path": "pages/blog.njk",
+				"url": "/blog/",
+				"output": true,
+				"collection": "pages"
+			},
+			{
+				"layout": "default.njk",
 				"permalink": "/",
 				"title": null,
-				"call_to_action": "Contact",
-				"large_header": true,
-				"show_in_navigation": false,
-				"navigation_order": 0,
-				"testimonials": [
+				"quotes": [
 					{
-						"message": "We use Justice Law in all our endeavours. They offer an unparalleled service when it comes to running a business.",
-						"testimonial_image": "https://placekitten.com/g/60/60?a=.png",
-						"name": "Joice Carmold"
+						"message": "So awesome!",
+						"name": "Happy Chappy"
 					},
 					{
-						"message": "Justice Law are the best of the best. Being local, they care about people and have strong ties to the community.",
-						"testimonial_image": "https://placekitten.com/60/60?a=.png",
-						"name": "Peter Rottenburg"
+						"message": "Totally rad!",
+						"name": "Skatey One Eighty"
 					},
 					{
-						"message": "Justice Law were everything we could have hoped for when buying our first home. Highly recommended to all.",
-						"testimonial_image": "https://placebear.com/60/60?a=.png",
-						"name": "D. and G. Gibbleston"
+						"message": "Gnarly!",
+						"name": "Surfer Dude"
 					}
 				],
 				"path": "pages/index.njk",
@@ -141,52 +126,15 @@
 				"collection": "pages"
 			},
 			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
+				"layout": "default.njk",
 				"permalink": "/{{ page.fileSlug }}/",
-				"title": "Services",
-				"call_to_action": "Contact",
-				"large_header": false,
-				"show_in_navigation": true,
-				"navigation_order": 2,
-				"path": "pages/services.md",
-				"url": "/services/",
-				"output": true,
-				"collection": "pages"
-			},
-			{
-				"ogtype": "website",
-				"layout": "layouts/default.njk",
-				"permalink": "/blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}",
-				"title": "Blog",
-				"call_to_action": "Contact",
-				"large_header": false,
-				"show_in_navigation": true,
-				"navigation_order": 4,
-				"path": "pages/blog.njk",
-				"url": "/blog/",
+				"title": "The notes!",
+				"path": "pages/notes.md",
+				"url": "/notes/",
 				"output": true,
 				"collection": "pages"
 			}
 		]
-	},
-	"collections_config": {
-		"posts": {
-			"path": "posts",
-			"output": true,
-			"auto_discovered": true
-		},
-		"staffMembers": {
-			"path": "staff-members",
-			"output": false,
-			"auto_discovered": true
-		},
-		"pages": {
-			"path": "",
-			"output": true,
-			"filter": "strict",
-			"auto_discovered": true
-		}
 	},
 	"data": {},
 	"generator": {

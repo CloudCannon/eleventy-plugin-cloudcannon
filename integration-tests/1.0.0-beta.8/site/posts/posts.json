@@ -1,7 +1,0 @@
-{
-	"layout": "layouts/default.njk",
-	"tags": "posts",
-	"permalink": "/posts/{{ page.fileSlug }}/",
-	"background_image_path": "/uploads/building.jpg",
-	"large_header": false
-}

@@ -1,32 +1,15 @@
 {
-  "name": "justice-eleventy-template",
+  "name": "test",
+  "private": "true",
   "version": "0.0.1",
-  "description": "Law firm themed business template for Eleventy.",
+  "description": "test eleventy website",
   "main": ".eleventy.js",
   "scripts": {
     "start": "eleventy"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CloudCannon/justice-eleventy-template.git"
-  },
-  "keywords": [
-    "eleventy-template",
-    "cloudcannon"
-  ],
-  "author": "CloudCannon",
-  "contributors": [
-    "Ross Phillips"
-  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/CloudCannon/justice-eleventy-template/issues"
-  },
-  "homepage": "https://github.com/CloudCannon/justice-eleventy-template#readme",
   "devDependencies": {
-    "@11ty/eleventy": "1.0.0-beta.8"
-  },
-  "dependencies": {
+    "@11ty/eleventy": "1.0.0-beta.8",
     "eleventy-plugin-cloudcannon": "file:../../.."
   }
 }

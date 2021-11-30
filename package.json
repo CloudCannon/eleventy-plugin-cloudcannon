@@ -7,7 +7,7 @@
     "test": "ava tests/**/*.test.js",
     "test:watch": "ava tests/**/*.test.js --watch --verbose",
     "test:coverage": "c8 --all ava tests/**/*.test.js",
-    "test:integration": "ava integration-tests/*/*.test.js -c=1 --verbose",
+    "test:integration": "ava integration-tests/*/*.test.js --verbose -T=60s",
     "lint": "eslint src",
     "release:latest": "npx np",
     "release:next": "npx np --tag=next"

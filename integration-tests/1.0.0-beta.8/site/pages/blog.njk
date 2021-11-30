@@ -1,36 +1,26 @@
 ---
 pagination:
-  data: collections.posts
+  data: collections.postsWithAuthor
   size: 10
 permalink: "/blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}"
 title: Blog
-call_to_action: Contact
-large_header: false
-show_in_navigation: true
-navigation_order: 4
 ---
-<p class="editable">Get an introduction to some industry topics and stay informed with our in-depth articles.</p>
+<p>Here are the blog posts:</p>
 
-<ol class="post-list">
+<ol>
 	{%- for post in pagination.items -%}
-		{%- include 'post-summary.njk' -%}
+		<li><a href="{{ post.url }}">{{ post.data.title }}</a> by {{ post.data.authorItem.data.name }}</li>
 	{%- endfor -%}
 </ol>
 
 {% if pagination.href.previous or pagination.href.next %}
-	<div class="pagination">
-		{% if pagination.href.previous %}
-			<a href="{{ site.baseurl }}{{ pagination.href.previous }}" class="previous btn">&larr; Newer</a>
-		{% elif pagination.href.next %}
-			<span></span>
-		{% endif %}
+	<p>{{ pagination.pageNumber }} of {{ pagination.hrefs.length }}</p>
 
-		<span>{{ pagination.pageNumber }} of {{ pagination.hrefs.length }}</span>
+	{% if pagination.href.previous %}
+		<p><a href="{{ pagination.href.previous }}">Previous page</a></p>
+	{% endif %}
 
-		{% if pagination.href.next %}
-			<a href="{{ site.baseurl }}{{ pagination.href.next }}" class="next btn">Older &rarr;</a>
-		{% elif pagination.href.previous %}
-			<span></span>
-		{% endif %}
-	</div>
+	{% if pagination.href.next %}
+		<p><a href="{{ pagination.href.next }}">Next page</a></p>
+	{% endif %}
 {% endif %}

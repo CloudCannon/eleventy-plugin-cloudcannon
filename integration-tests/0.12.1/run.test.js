@@ -7,7 +7,6 @@ const testDir = 'integration-tests/0.12.1';
 const cwd = 'integration-tests/0.12.1/site';
 
 test('beta', async (t) => {
-	t.timeout(60000);
 	await exec('npm install', { cwd, env: process.env });
 
 	const { stdout } = await exec('npm start', { cwd, env: process.env });

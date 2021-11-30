@@ -1,10 +1,15 @@
 {
 	"timezone": "Etc/UTC",
-	"_select_data": {
-		"call_to_actions": [
-			"Contact",
-			"Blog",
-			"Map"
-		]
+	"_inputs": {
+		"layout": {
+			"hidden": "true"
+		}
+	},
+	"collections": {
+		"authors": {
+			"name": "The Authors",
+			"path": "authors",
+			"output": false
+		}
 	}
 }

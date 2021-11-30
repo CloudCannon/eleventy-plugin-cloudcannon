@@ -91,7 +91,7 @@ function processItems(items, tag, config) {
 		const stringified = stringifyJson(processed);
 
 		if (stringified !== undefined) {
-			memo.push(processed);
+			memo.push(JSON.parse(stringified));
 		}
 
 		return memo;
