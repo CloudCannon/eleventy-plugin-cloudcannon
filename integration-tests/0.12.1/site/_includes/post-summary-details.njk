@@ -1,0 +1,10 @@
+<p class="post-summary-details">
+	{{ post.data.date | postDate }}
+
+	{% for tag in post.data.tags %}
+		{% if tag !== 'posts' %}
+			&bull;
+			<a class="post-summary-category" href="/category/{{ tag | slug }}/">{{ tag }}</a>
+		{% endif %}
+	{% endfor %}
+</p>

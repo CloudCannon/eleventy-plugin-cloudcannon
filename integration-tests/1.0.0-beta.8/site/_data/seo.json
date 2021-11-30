@@ -1,0 +1,12 @@
+{
+	"title": "Justice Template",
+	"description": "Eleventy template with example content for a law firm.",
+	"url": "",
+	"author": "",
+	"authorEmail": "",
+	"twitter": "",
+	"image": "",
+	"options": {
+		"imageWithBaseUrl": true
+	}
+}

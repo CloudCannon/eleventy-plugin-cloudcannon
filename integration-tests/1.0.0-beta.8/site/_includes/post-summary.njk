@@ -1,0 +1,19 @@
+<li class="post-summary">
+	{% if post.data.image %}
+		<div class="post-summary-image">
+			<img src="{{ post.data.image }}" alt="Photo of {{ post.data.title }}">
+		</div>
+	{% endif %}
+
+	<div class="post-summary-content {% if post.data.image %}has-post-summary-image{% endif %}">
+		<h3 class="post-summary-title"><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+		{% include 'post-summary-details.njk' %}
+
+		{% set author = collections.staffMembers | getCollectionItemBySlug(post.data.authorStaffMember) %}
+		<p class="post-summary-author">
+			<img src="{{ author.data.image }}" alt="Photo of {{ author.data.name }}" width="30" height="30"> {{ author.data.name }}
+		</p>
+	</div>
+
+	<p class="post-summary-excerpt">{{ post.data.page.excerpt }}</p>
+</li>

@@ -1,6 +1,6 @@
 const { dirname, basename, extname } = require('path');
 const isEqual = require('lodash.isequal');
-const { normalisePath, stripTopPath, stringifyJson } = require('./utility.js');
+const { getSourcePath, stringifyJson } = require('./utility.js');
 require('pkginfo')(module, 'name', 'version');
 
 const environment = process.env.ELEVENTY_ENV || '';
@@ -12,10 +12,6 @@ const cloudcannon = {
 
 function isTopPath(basePath, index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
-}
-
-function getSourcePath(inputPath, source) {
-	return stripTopPath(normalisePath(inputPath), source).replace(/^\/+/, '');
 }
 
 function isStaticPage(item) {
@@ -88,25 +84,22 @@ function processItem(item, tag, source) {
 	return processed;
 }
 
-// Stringified individually to avoid one item breaking it
-// TODO: Find a way around this redundant process
-function jsonifyItems(items, tag, config) {
-	const processedItems = items?.reduce?.((memo, item) => {
+// Tests stringify individually to avoid one item breaking it
+function processItems(items, tag, config) {
+	return items?.reduce?.((memo, item) => {
 		const processed = processItem(item, tag, config.source);
 		const stringified = stringifyJson(processed);
 
 		if (stringified !== undefined) {
-			memo.push(stringified);
+			memo.push(processed);
 		}
 
 		return memo;
 	}, []) || [];
-
-	return JSON.parse(`[${processedItems.join(',\n')}]`);
 }
 
 function getData(context, config) {
-	const dataConfig = config.data_config;
+	const dataConfig = config.data_config || {};
 
 	return Object.keys(dataConfig).reduce((memo, key) => {
 		if (dataConfig[key] === true) {
@@ -142,14 +135,22 @@ function getCollections(collectionsConfig, context, config) {
 	}
 
 	return Object.keys(collectionsConfig).reduce((memo, collectionKey) => {
-		memo[collectionKey] = jsonifyItems(otherCollections[collectionKey], collectionKey, config);
+		const items = otherCollections[collectionKey];
+
+		if (items?.length) {
+			memo[collectionKey] = processItems(items, collectionKey, config);
+		} else {
+			console.log('Ignoring collection', collectionKey);
+			delete collectionsConfig[collectionKey];
+		}
+
 		return memo;
 	}, {});
 }
 
 function getCollectionsConfig(context, config) {
 	if (config.collections_config_override) {
-		return config.collections_config; // User-defined collections
+		return config.collections_config || {}; // User-defined collections
 	}
 
 	const { all, ...otherCollections } = context.collections;
@@ -159,6 +160,7 @@ function getCollectionsConfig(context, config) {
 		data: {
 			path: config.paths.data,
 			output: false,
+			auto_discovered: !config.collections_config?.data,
 			...config.collections_config?.data
 		},
 		...config.collections_config
@@ -179,9 +181,12 @@ function getCollectionsConfig(context, config) {
 		topBasePaths.forEach((basePath) => {
 			// Multiple collections can share this basePath, but this should cover common use-cases
 			const collectionKey = topBasePaths.length === 1 ? key : basePath;
+			const customPath = collectionsConfig[collectionKey]?.path;
+
 			collectionsConfig[collectionKey] = {
 				path: basePath,
 				output: isOutput,
+				auto_discovered: !customPath && customPath !== '',
 				...collectionsConfig[collectionKey]
 			};
 		});
@@ -189,11 +194,13 @@ function getCollectionsConfig(context, config) {
 
 	const hasPages = all.some((item) => isPage(item) || isStaticPage(item));
 	if (hasPages) {
+		const pagesPath = collectionsConfig.pages?.path;
 		// Add collection for pages without collection
 		collectionsConfig.pages = {
-			path: config.paths.pages || '',
+			path: pagesPath || config.paths.pages || '',
 			output: true,
 			filter: 'strict',
+			auto_discovered: !pagesPath && pagesPath !== '',
 			...collectionsConfig.pages
 		};
 	}
@@ -212,7 +219,7 @@ function getGenerator(context, config, options) {
 		environment: environment || '',
 		metadata: {
 			markdown: 'markdown-it',
-			'markdown-it': options.markdownItOptions || { html: true }
+			'markdown-it': options?.markdownItOptions || { html: true }
 		}
 	};
 }
@@ -234,15 +241,10 @@ function getInfo(context, config, options) {
 }
 
 module.exports = {
-	isTopPath,
 	isStaticPage,
 	isPage,
-	isUnlisted,
-	isIgnoredItemKey,
 	processItem,
-	jsonifyItems,
 	getData,
-	guessCollections,
 	getCollections,
 	getCollectionsConfig,
 	getGenerator,

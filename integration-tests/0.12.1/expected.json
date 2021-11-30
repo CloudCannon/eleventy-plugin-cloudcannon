@@ -1,0 +1,268 @@
+{
+	"timezone": "Etc/UTC",
+	"_comments": {
+		"large_header": "Toggles the size of the top banner.",
+		"show_in_navigation": "Toggles a link in the top banner.",
+		"authorStaffMember": "The staff member writing this post.",
+		"call_to_action": "Type of request shown at the bottom of this page.",
+		"background_image_path": "Image shown in the top banner, blank for the default.",
+		"testimonials": "Update, add or remove testimonials.",
+		"map": "Update the map location and display settings.",
+		"latitude": "Coordinates for the center marker on the map.",
+		"longitude": "Coordinates for the center marker on the map.",
+		"zoom": "The zoom level for the map.",
+		"phone_extension": "The digits after dialing the company phone.",
+		"credentials": "Shown as subtext on staff member summaries.",
+		"contact_email_address": "Address for the contact form to send to.",
+		"new_window": "Whether the link opens a new browser tab/window."
+	},
+	"_select_data": {
+		"call_to_actions": [
+			"Contact",
+			"Blog",
+			"Map"
+		],
+		"social_icons": [
+			"Facebook",
+			"Instagram",
+			"LinkedIn",
+			"Pinterest",
+			"Tumblr",
+			"Twitter",
+			"YouTube",
+			"RSS"
+		]
+	},
+	"base_url": "",
+	"source": "",
+	"paths": {
+		"static": "",
+		"uploads": "uploads",
+		"data": "_data",
+		"collections": "",
+		"pages": "",
+		"layouts": "_includes"
+	},
+	"cloudcannon": {
+		"name": "eleventy-plugin-cloudcannon",
+		"version": "0.0.21"
+	},
+	"collections": {
+		"posts": [
+			{
+				"layout": "layouts/default.njk",
+				"tags": [
+					"posts",
+					"Business"
+				],
+				"permalink": "/posts/{{ page.fileSlug }}/",
+				"background_image_path": "/uploads/building.jpg",
+				"large_header": false,
+				"_options": {
+					"tags": {
+						"hidden": true
+					},
+					"layout": {
+						"hidden": true
+					},
+					"permalink": {
+						"hidden": true
+					}
+				},
+				"ogtype": "website",
+				"title": "Business Mergers",
+				"date": "2016-08-10T00:00:00.000Z",
+				"authorStaffMember": "jane-doe",
+				"image": "https://unsplash.it/600/450?image=737&a=.png",
+				"path": "posts/business-mergers.md",
+				"url": "/posts/business-mergers/",
+				"output": true,
+				"collection": "posts"
+			},
+			{
+				"layout": "layouts/default.njk",
+				"tags": [
+					"posts",
+					"Property"
+				],
+				"permalink": "/posts/{{ page.fileSlug }}/",
+				"background_image_path": "/uploads/building.jpg",
+				"large_header": false,
+				"_options": {
+					"tags": {
+						"hidden": true
+					},
+					"layout": {
+						"hidden": true
+					},
+					"permalink": {
+						"hidden": true
+					}
+				},
+				"ogtype": "website",
+				"title": "Real Estate Flipping",
+				"date": "2016-11-11T00:00:00.000Z",
+				"authorStaffMember": "john-doe",
+				"image": "https://unsplash.it/600/450?image=448&a=.png",
+				"path": "posts/real-estate-flipping.md",
+				"url": "/posts/real-estate-flipping/",
+				"output": true,
+				"collection": "posts"
+			}
+		],
+		"staffMembers": [
+			{
+				"tags": [
+					"staffMembers"
+				],
+				"permalink": false,
+				"_options": {
+					"tags": {
+						"hidden": true
+					},
+					"permalink": {
+						"hidden": true
+					}
+				},
+				"name": "Jane Doe",
+				"image": "https://placekitten.com/440/440?a=.png",
+				"description": "Jane has 19 years of experience in law, and specialises in property and business.",
+				"credentials": "LLB",
+				"phone_extension": "02",
+				"path": "staff-members/jane-doe.md",
+				"url": "",
+				"output": false,
+				"collection": "staffMembers"
+			},
+			{
+				"tags": [
+					"staffMembers"
+				],
+				"permalink": false,
+				"_options": {
+					"tags": {
+						"hidden": true
+					},
+					"permalink": {
+						"hidden": true
+					}
+				},
+				"name": "John Doe",
+				"image": "https://placebear.com/440/440?a=.png",
+				"description": "With an interest in employment law, John works tirelessly to improve workplaces.",
+				"credentials": "LLB",
+				"phone_extension": "11",
+				"path": "staff-members/john-doe.md",
+				"url": "",
+				"output": false,
+				"collection": "staffMembers"
+			}
+		],
+		"pages": [
+			{
+				"layout": "layouts/default.njk",
+				"permalink": "/{{ page.fileSlug }}/",
+				"ogtype": "website",
+				"title": "About",
+				"call_to_action": "Contact",
+				"large_header": false,
+				"show_in_navigation": true,
+				"navigation_order": 1,
+				"path": "pages/about.njk",
+				"url": "/about/",
+				"output": true,
+				"collection": "pages"
+			},
+			{
+				"layout": "layouts/default.njk",
+				"permalink": "/blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}",
+				"ogtype": "website",
+				"title": "Blog",
+				"call_to_action": "Contact",
+				"large_header": false,
+				"show_in_navigation": true,
+				"navigation_order": 4,
+				"path": "pages/blog.njk",
+				"url": "/blog/",
+				"output": true,
+				"collection": "pages"
+			},
+			{
+				"layout": "layouts/default.njk",
+				"permalink": "/",
+				"ogtype": "website",
+				"title": null,
+				"call_to_action": "Contact",
+				"large_header": true,
+				"show_in_navigation": false,
+				"navigation_order": 0,
+				"testimonials": [
+					{
+						"message": "We use Justice Law in all our endeavours. They offer an unparalleled service when it comes to running a business.",
+						"testimonial_image": "https://placekitten.com/g/60/60?a=.png",
+						"name": "Joice Carmold"
+					},
+					{
+						"message": "Justice Law are the best of the best. Being local, they care about people and have strong ties to the community.",
+						"testimonial_image": "https://placekitten.com/60/60?a=.png",
+						"name": "Peter Rottenburg"
+					},
+					{
+						"message": "Justice Law were everything we could have hoped for when buying our first home. Highly recommended to all.",
+						"testimonial_image": "https://placebear.com/60/60?a=.png",
+						"name": "D. and G. Gibbleston"
+					}
+				],
+				"path": "pages/index.njk",
+				"url": "/",
+				"output": true,
+				"collection": "pages"
+			},
+			{
+				"layout": "layouts/default.njk",
+				"permalink": "/{{ page.fileSlug }}/",
+				"ogtype": "website",
+				"title": "Services",
+				"call_to_action": "Contact",
+				"large_header": false,
+				"show_in_navigation": true,
+				"navigation_order": 2,
+				"path": "pages/services.md",
+				"url": "/services/",
+				"output": true,
+				"collection": "pages"
+			}
+		]
+	},
+	"collections_config": {
+		"posts": {
+			"path": "posts",
+			"output": true,
+			"auto_discovered": true
+		},
+		"staffMembers": {
+			"path": "staff-members",
+			"output": false,
+			"auto_discovered": true
+		},
+		"pages": {
+			"path": "",
+			"output": true,
+			"filter": "strict",
+			"auto_discovered": true
+		}
+	},
+	"data": {},
+	"generator": {
+		"name": "eleventy",
+		"version": "^0.12.1",
+		"environment": "",
+		"metadata": {
+			"markdown": "markdown-it",
+			"markdown-it": {
+				"html": true
+			}
+		}
+	},
+	"version": "0.0.3"
+}

@@ -1,2 +1,8 @@
 /node_modules/
 /coverage/
+/integration-tests/0.12.1/site/cloudcannon/
+/integration-tests/0.12.1/site/_site/
+/integration-tests/0.12.1/site/node_modules/
+/integration-tests/1.0.0-beta.8/site/cloudcannon/
+/integration-tests/1.0.0-beta.8/site/_site/
+/integration-tests/1.0.0-beta.8/site/node_modules/

@@ -12,6 +12,10 @@ function stripTopPath(path, topPath) {
 	return path.startsWith(normalisedTop) ? path.substring(normalisedTop.length) : path;
 }
 
+function getSourcePath(inputPath, source) {
+	return stripTopPath(normalisePath(inputPath), source).replace(/^\/+/, '');
+}
+
 function replacer(key, value) {
 	const isPage = value
 		&& typeof value === 'object'
@@ -46,5 +50,6 @@ const stringifyJson = (obj, fallback) => {
 module.exports = {
 	normalisePath,
 	stripTopPath,
+	getSourcePath,
 	stringifyJson
 };

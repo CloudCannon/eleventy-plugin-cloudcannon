@@ -4,9 +4,10 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "ava",
-    "test:watch": "ava --watch --verbose",
-    "test:coverage": "c8 --all ava",
+    "test": "ava tests/**/*.test.js",
+    "test:watch": "ava tests/**/*.test.js --watch --verbose",
+    "test:coverage": "c8 --all ava tests/**/*.test.js",
+    "test:integration": "ava integration-tests/*/*.test.js -c=1 --verbose",
     "lint": "eslint src",
     "release:latest": "npx np",
     "release:next": "npx np --tag=next"

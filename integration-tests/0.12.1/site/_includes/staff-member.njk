@@ -1,0 +1,14 @@
+<div class="staff-details">
+	<div class="staff-image">
+		<img src="{{ member.data.image }}" alt="Staff photo for {{ member.data.name }}" width="120" height="120">
+	</div>
+	<ul class="staff-info">
+		<li>{{ member.data.name }}</li>
+		<li><small>{{ member.data.credentials }}</small></li>
+		<li><a href="tel:{{ company.contact_phone_number }}">{{ company.contact_phone_number }}</a> ext {{ member.data.phone_extension }}</li>
+	</ul>
+</div>
+
+<div class="staff-bio">
+	<p>{{ member.data.description }}</p>
+</div>

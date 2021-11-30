@@ -1,0 +1,12 @@
+{
+	"tags": "staffMembers",
+	"permalink": false,
+	"_options": {
+		"tags": {
+			"hidden": true
+		},
+		"permalink": {
+			"hidden": true
+		}
+	}
+}

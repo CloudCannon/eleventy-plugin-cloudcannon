@@ -4,12 +4,32 @@ require('pkginfo')(module, 'version');
 
 const version = module.exports.version || '';
 
-const config = {
+const options = {
 	dir: {
 		input: '.',
 		data: '_data',
 		layouts: '_includes'
+	},
+	markdownItOptions: {
+		html: true,
+		linkify: true
 	}
+};
+
+const config = {
+	_select_data: {
+		shrutes: ['Dwight', 'Mose']
+	},
+	base_url: '',
+	paths: {
+		collections: '',
+		data: '_data',
+		layouts: '_includes',
+		pages: '',
+		static: '',
+		uploads: 'uploads',
+	},
+	source: ''
 };
 
 const collectionItem = {
@@ -138,23 +158,24 @@ test('gets data', (t) => {
 	const context = {
 		things: ['a', 'b', 'c'],
 		nope: { hello: 'there' },
-		cloudcannon: {
-			data: {
-				things: true,
-				stuff: true,
-				nope: false
-			}
+	};
+
+	const customConfig = {
+		data_config: {
+			things: true,
+			stuff: true,
+			nope: false
 		}
 	};
 
-	t.deepEqual(generator.getData(context), {
+	t.deepEqual(generator.getData(context, customConfig), {
 		things: ['a', 'b', 'c'],
 		stuff: {}
 	});
 });
 
 test('get no data', (t) => {
-	t.deepEqual(generator.getData({}), {});
+	t.deepEqual(generator.getData({}, {}), {});
 });
 
 test('processes item', (t) => {
@@ -195,54 +216,38 @@ const processedGenerator = {
 	environment: '',
 	metadata: {
 		markdown: 'markdown-it',
-		'markdown-it': { html: true }
+		'markdown-it': {
+			html: true,
+			linkify: true
+		}
 	}
 };
 
 test('gets generator', (t) => {
-	const config = {
-		markdownItOptions: { html: true }
-	};
-
 	const context = {
 		pkg: { dependencies: { '@11ty/eleventy': '1' } }
 	};
 
-	t.deepEqual(generator.getGenerator(context, config), processedGenerator);
+	t.deepEqual(generator.getGenerator(context, config, options), processedGenerator);
 
 	const contextDev = {
 		pkg: { devDependencies: { '@11ty/eleventy': '2' } }
 	};
 
-	t.deepEqual(generator.getGenerator(contextDev, config), {
+	t.deepEqual(generator.getGenerator(contextDev, config, options), {
 		...processedGenerator,
 		version: '2'
 	});
 
-	t.deepEqual(generator.getGenerator({}, config), {
+	t.deepEqual(generator.getGenerator({}, config, options), {
 		...processedGenerator,
 		version: ''
 	});
 });
 
 const processedPaths = {
-	uploads: 'uploads',
-	data: '_data',
-	collections: '',
-	layouts: '_includes'
+	...config.paths
 };
-
-test('gets paths', (t) => {
-	const context = {
-		cloudcannon: { uploads_dir: 'assets/raw' }
-	};
-
-	t.deepEqual(generator.getPaths({}, config), processedPaths);
-	t.deepEqual(generator.getPaths(context, config), {
-		...processedPaths,
-		uploads: 'assets/raw'
-	});
-});
 
 test('gets collections config', (t) => {
 	const context = {
@@ -256,15 +261,18 @@ test('gets collections config', (t) => {
 		pages: {
 			path: '',
 			output: true,
-			filter: 'strict'
+			filter: 'strict',
+			auto_discovered: true
 		},
 		staff: {
 			output: true,
-			path: 'staff'
+			path: 'staff',
+			auto_discovered: true
 		},
-		data: {
+		data: { // would be removed later since there is no data the context
 			output: false,
 			path: '_data',
+			auto_discovered: true
 		}
 	});
 });
@@ -281,38 +289,39 @@ test('gets complex collections config', (t) => {
 	t.deepEqual(generator.getCollectionsConfig(context, config), {
 		'nested/authors': {
 			output: true,
-			path: 'nested/authors'
+			path: 'nested/authors',
+			auto_discovered: true
 		},
 		pages: {
 			path: '',
 			output: true,
-			filter: 'strict'
+			filter: 'strict',
+			auto_discovered: true
 		},
 		staff: {
 			output: true,
-			path: 'staff'
+			path: 'staff',
+			auto_discovered: true
 		},
 		data: {
 			output: false,
-			path: '_data'
+			path: '_data',
+			auto_discovered: true
 		}
 	});
 });
 
 test('gets custom collections config', (t) => {
-	const context = {
-		collections: {
-			all: [page, collectionItem, staticPage],
-			staff: [collectionItem]
-		},
-		cloudcannon: {
-			collections: {
-				anything: 'here'
-			}
+	const customConfig = {
+		collections_config_override: true,
+		collections_config: {
+			anything: 'here'
 		}
-	};
+	}
 
-	t.deepEqual(generator.getCollectionsConfig(context, config), {
+
+
+	t.deepEqual(generator.getCollectionsConfig(null, customConfig), {
 		anything: 'here'
 	});
 });
@@ -334,15 +343,13 @@ const processedInfo = {
 		pages: {
 			path: '',
 			output: true,
-			filter: 'strict'
+			filter: 'strict',
+			auto_discovered: true
 		},
 		staff: {
 			output: true,
-			path: 'staff'
-		},
-		data: {
-			output: false,
-			path: '_data',
+			path: 'staff',
+			auto_discovered: true
 		}
 	},
 	data: {},
@@ -361,15 +368,10 @@ test('gets info', (t) => {
 		collections: {
 			all: [page, collectionItem, staticPage],
 			staff: [collectionItem]
-		},
-		cloudcannon: {
-			_select_data: {
-				shrutes: ['Dwight', 'Mose']
-			}
 		}
 	};
 
-	const result = generator.getInfo(context, config);
+	const result = generator.getInfo(context, config, options);
 	t.deepEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);
