@@ -8,7 +8,7 @@ const cloudcannon = {
 	version: module.exports.version
 };
 
-function getInfo(context, config, options) {
+function getInfo(context, config) {
 	const collectionsConfig = getCollectionsConfig(context, config);
 	const collections = getCollections(collectionsConfig, context, config);
 
@@ -18,7 +18,7 @@ function getInfo(context, config, options) {
 		collections: collections,
 		collections_config: collectionsConfig,
 		data: getData(context, config),
-		generator: getGenerator(context, options),
+		generator: getGenerator(context, config),
 		time: new Date().toISOString(),
 		version: '0.0.3' // schema version
 	};

@@ -2,6 +2,13 @@ const test = require('ava');
 const { readConfig } = require('../src/config.js');
 
 test('reads legacy config', (t) => {
+	const options = {
+		markdownItOptions: {
+			html: true,
+			linkify: true
+		}
+	};
+
 	const context = {
 		cloudcannon: {
 			data: {
@@ -109,9 +116,18 @@ test('reads legacy config', (t) => {
 		source_editor: {
 			theme: 'dawn',
 		},
+		generator: {
+			metadata: {
+				markdown: 'markdown-it',
+				'markdown-it': {
+					html: true,
+					linkify: true
+				}
+			}
+		}
 	};
 
-	const config = readConfig(context);
+	const config = readConfig(context, options);
 
 	t.deepEqual(config, expected);
 });

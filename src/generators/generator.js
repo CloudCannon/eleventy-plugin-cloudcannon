@@ -1,4 +1,4 @@
-function getGenerator(context, options) {
+function getGenerator(context, config) {
 	const eleventyVersion = context.pkg?.dependencies?.['@11ty/eleventy']
 		|| context.pkg?.devDependencies?.['@11ty/eleventy']
 		|| '';
@@ -7,10 +7,12 @@ function getGenerator(context, options) {
 		name: 'eleventy',
 		version: eleventyVersion,
 		environment: process.env.ELEVENTY_ENV || '',
+		...config.generator,
 		metadata: {
 			markdown: 'markdown-it',
-			'markdown-it': options?.markdownItOptions || { html: true }
-		}
+			'markdown-it': { html: true },
+			...config.generator?.metadata
+		},
 	};
 }
 

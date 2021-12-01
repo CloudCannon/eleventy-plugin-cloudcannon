@@ -1,7 +1,7 @@
 const { relative } = require('path');
 const { cosmiconfigSync } = require('cosmiconfig');
-const { red, bold } = require('chalk');
-const { log } = require('./util/logger.js');
+const { red, bold, yellow } = require('chalk');
+const { log, logError } = require('./util/logger.js');
 
 function readFileSync(configPath) {
 	const moduleName = 'cloudcannon';
@@ -27,15 +27,15 @@ function readFileSync(configPath) {
 		}
 	} catch (e) {
 		if (e.code === 'ENOENT') {
-			log(`⚠️ ${red('No config file found at')} ${red.bold(configPath)}`);
+			log(red(`⚠️ No config file found at ${bold(configPath)}`));
 			return false;
-		} else {
-			log(`⚠️ ${red('Error reading config file')}`, 'error');
-			throw e;
 		}
+
+		logError(red('⚠️ Error reading config file'));
+		throw e;
 	}
 
-	log('⚙️ No config file found');
+	log(`⚙️ No config file found at ${bold('cloudcannon.config.*')}`);
 	return false;
 }
 
@@ -47,6 +47,10 @@ function rewriteKey(object, oldKey, newKey) {
 }
 
 function getLegacyConfig(context) {
+	if (context.cloudcannon) {
+		log(yellow(`⚙️ Falling back to ${bold('cloudcannon')} site data for config`));
+	}
+
 	const legacy = context.cloudcannon || {};
 	rewriteKey(legacy, 'data', 'data_config');
 
@@ -74,8 +78,8 @@ function getLegacyConfig(context) {
 }
 
 function readConfig(context, options = {}) {
+	const file = readFileSync() || {}; // TODO custom config path here
 	const legacy = getLegacyConfig(context);
-	const file = readFileSync() || {};
 
 	const baseUrl = file.base_url || options.pathPrefix || '';
 
@@ -94,6 +98,16 @@ function readConfig(context, options = {}) {
 			layouts: file.paths?.layouts || options.dir?.layouts || '_includes'
 		}
 	};
+
+	if (options.markdownItOptions) {
+		config.generator = {
+			...config.generator,
+			metadata: {
+				markdown: 'markdown-it',
+				'markdown-it': options.markdownItOptions
+			}
+		};
+	}
 
 	rewriteKey(config, '_source_editor', 'source_editor');
 	rewriteKey(config, '_editor', 'editor');

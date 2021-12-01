@@ -4,19 +4,16 @@ require('pkginfo')(module, 'version');
 
 const version = module.exports.version || '';
 
-const options = {
-	dir: {
-		input: '.',
-		data: '_data',
-		layouts: '_includes'
-	},
-	markdownItOptions: {
-		html: true,
-		linkify: true
-	}
-};
-
 const config = {
+	generator: {
+		metadata: {
+			markdown: 'markdown-it',
+			'markdown-it': {
+				html: true,
+				linkify: true
+			}
+		}
+	},
 	_select_data: {
 		shrutes: ['Dwight', 'Mose']
 	},
@@ -160,7 +157,7 @@ test('gets info', (t) => {
 		}
 	};
 
-	const result = getInfo(context, config, options);
+	const result = getInfo(context, config);
 	t.deepEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);
