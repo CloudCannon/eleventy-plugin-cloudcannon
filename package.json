@@ -4,10 +4,10 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "ava tests/**/*.test.js",
-    "test:watch": "ava tests/**/*.test.js --watch --verbose",
-    "test:coverage": "c8 --all ava tests/**/*.test.js",
-    "test:integration": "ava integration-tests/*/*.test.js --verbose -T=60s",
+    "test": "ava 'tests/**/*' --verbose",
+    "test:watch": "ava 'tests/**/*' --watch --verbose",
+    "test:coverage": "c8 --all --src=src ava 'tests/**/*' --verbose",
+    "test:integration": "ava integration-tests/run.test.js --verbose --timeout=60s",
     "lint": "eslint src",
     "release:latest": "npx np",
     "release:next": "npx np --tag=next"
@@ -34,9 +34,9 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "cosmiconfig": "^7.0.1",
-    "fast-safe-stringify": "^2.1.1",
     "lodash.isequal": "^4.5.0",
-    "pkginfo": "^0.4.1"
+    "pkginfo": "^0.4.1",
+    "safe-stable-stringify": "^2.3.0"
   },
   "devDependencies": {
     "ava": "^3.15.0",

@@ -1,6 +1,7 @@
 const { relative } = require('path');
 const { cosmiconfigSync } = require('cosmiconfig');
-const chalk = require('chalk');
+const { red, bold } = require('chalk');
+const { log } = require('./util/logger.js');
 
 function readFileSync(configPath) {
 	const moduleName = 'cloudcannon';
@@ -21,20 +22,20 @@ function readFileSync(configPath) {
 
 		if (config) {
 			const relativeConfigPath = relative(process.cwd(), config.filepath);
-			console.log(`⚙️ Using config file at ${chalk.bold(relativeConfigPath)}`);
+			log(`⚙️ Using config file at ${bold(relativeConfigPath)}`);
 			return config.config || {};
 		}
 	} catch (e) {
 		if (e.code === 'ENOENT') {
-			console.log(`⚠️ ${chalk.red('No config file found at')} ${chalk.red.bold(configPath)}`);
+			log(`⚠️ ${red('No config file found at')} ${red.bold(configPath)}`);
 			return false;
 		} else {
-			console.log(`⚠️ ${chalk.red('Error reading config file')}`, 'error');
+			log(`⚠️ ${red('Error reading config file')}`, 'error');
 			throw e;
 		}
 	}
 
-	console.log('⚙️ No config file found');
+	log('⚙️ No config file found');
 	return false;
 }
 
