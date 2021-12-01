@@ -2,6 +2,9 @@
 
 An Eleventy (11ty) plugin that creates [CloudCannon](https://cloudcannon.com/) build information.
 
+This plugin runs during your Eleventy build, discovering your pages, collections, and data files to
+create a JSON file used to automatically integrate the site with CloudCannon.
+
 [<img src="https://img.shields.io/npm/v/eleventy-plugin-cloudcannon?logo=npm" alt="version badge">](https://www.npmjs.com/package/eleventy-plugin-cloudcannon)
 [<img src="https://img.shields.io/npm/dt/eleventy-plugin-cloudcannon" alt="downloads badge">](https://www.npmjs.com/package/eleventy-plugin-cloudcannon)
 
@@ -65,11 +68,14 @@ module.exports = function (eleventyConfig) {
 
 ## Configuration
 
-This plugin uses a your `cloudcannon.config.*` configuration file as a base to generate
-`_cloudcannon/info.json`.
+This plugin uses an optional `cloudcannon.config.*` configuration file as a base to generate
+`_cloudcannon/info.json` (used to integrate your site with CloudCannon).
 
-Configuration files must be in the same directory you run `npx @11ty/eleventy`. The first file
-found is used, the files supported are:
+Add your global CloudCannon configuration to this file, alongside any optional configuration for
+this plugin.
+
+Configuration files must be in the same directory you run `npx @11ty/eleventy`. The first supported
+file found in this order is used:
 
 - `cloudcannon.config.json`
 - `cloudcannon.config.yaml`
