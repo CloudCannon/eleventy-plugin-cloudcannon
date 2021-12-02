@@ -21,7 +21,9 @@ function readFileSync(configPath) {
 			: explorerSync.search();
 
 		if (config) {
-			const relativeConfigPath = relative(process.cwd(), config.filepath);
+			const cwd = process.cwd();
+			const relativeConfigPath = relative(cwd, config.filepath);
+			log(`ℹ️ Running in ${bold(cwd)}`);
 			log(`⚙️ Using config file at ${bold(relativeConfigPath)}`);
 			return config.config || {};
 		}
@@ -78,7 +80,7 @@ function getLegacyConfig(context) {
 }
 
 function readConfig(context, options = {}) {
-	const file = readFileSync() || {}; // TODO custom config path here
+	const file = readFileSync(process.env.CLOUDCANNON_CONFIG_PATH) || {};
 	const legacy = getLegacyConfig(context);
 
 	const baseUrl = file.base_url || options.pathPrefix || '';

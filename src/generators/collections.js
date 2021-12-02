@@ -1,5 +1,5 @@
 const { readdirSync } = require('fs');
-const { dirname } = require('path');
+const { dirname, join } = require('path');
 const { bold, yellow } = require('chalk');
 const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
@@ -114,7 +114,7 @@ function getCollectionsConfig(context, config) {
 
 	const collectionsConfig = discoverCollectionsConfig(context, config);
 
-	if (hasDataFiles(config.paths.data)) {
+	if (hasDataFiles(join(config.source, config.paths.data))) {
 		collectionsConfig.data = {
 			path: config.paths.data,
 			output: false,

@@ -5,6 +5,9 @@ module.exports = {
 			hidden: 'true'
 		}
 	},
+	paths: {
+		pages: 'pages'
+	},
 	collections_config: {
 		authors: {
 			name: 'The Authors',

@@ -4,13 +4,16 @@ const { readFile } = require('fs').promises;
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec);
 
-async function run(t, folder) {
+async function run(t, folder, buildCmd = 'npx @11ty/eleventy') {
 	const testDir = `integration-tests/${folder}`;
 	const cwd = `${testDir}/site`;
+	const options = { cwd, env: { ...process.env, FORCE_COLOR: true } };
 
-	console.log(bold('$ npm install'), cwd);
-	await exec('npm install', { cwd, env: { ...process.env, FORCE_COLOR: true } });
-	const { stdout, stderr } = await exec('npm start', { cwd, env: { ...process.env, FORCE_COLOR: true } });
+	console.log(bold('$ npm i'));
+	await exec('npm i', options);
+
+	console.log(bold(`$ ${buildCmd}`));
+	const { stdout, stderr } = await exec(buildCmd, options);
 
 	console.log(stdout);
 	console.log(stderr);
@@ -28,6 +31,22 @@ async function run(t, folder) {
 }
 
 test('0.12.1 with legacy configuration', async (t) => await run(t, '0.12.1-legacy'));
+
 test('0.12.1', async (t) => await run(t, '0.12.1'));
+
 test('1.0.0-beta.8', async (t) => await run(t, '1.0.0-beta.8'));
+
+test.only('1.0.0-beta.8 with output', async (t) => {
+	await run(t, '1.0.0-beta.8-output', 'npx @11ty/eleventy --output=out');
+});
+
+test('1.0.0-beta.8 with file source', async (t) => await run(t, '1.0.0-beta.8-file-source'));
+
+test('1.0.0-beta.8 with source', async (t) => {
+	await run(
+		t,
+		'1.0.0-beta.8-source',
+		'CLOUDCANNON_CONFIG_PATH=src/cloudcannon.config.js CC_ELEVENTY_INPUT=src npx @11ty/eleventy --input=src --config=src/.eleventy.js'
+	);
+});
 

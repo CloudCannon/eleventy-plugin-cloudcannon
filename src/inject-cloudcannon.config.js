@@ -12,10 +12,10 @@ try {
 // Used when the 'Manage eleventy-plugin-cloudcannon manually' option is disabled in CloudCannon.
 // Adds this plugin after running the renamed default config file.
 module.exports = function (eleventyConfig, ...args) {
-	console.log('💉 Injecting eleventy-plugin-cloudcannon...');
+	console.log('ℹ️ Installing eleventy-plugin-cloudcannon...');
 	const config = defaultConfig?.apply?.(this, [eleventyConfig, ...args]);
 	console.log('ℹ️ Adding eleventy-plugin-cloudcannon...');
-	eleventyConfig.addPlugin(pluginCloudCannon, eleventyConfig.cloudcannonOptions || config || {});
-	console.log('🆗 Injected eleventy-plugin-cloudcannon!');
+	eleventyConfig.addPlugin(pluginCloudCannon, config);
+	console.log('🆗 Installed eleventy-plugin-cloudcannon!');
 	return config;
 };

@@ -19,14 +19,16 @@ layout: null
 
 // defaultOptions should match the return value from https://www.11ty.dev/docs/config/
 module.exports = function (eleventyConfig, defaultOptions) {
+	const ccOptions = eleventyConfig.cloudcannonOptions || defaultOptions || {};
+
 	const options = {
-		pathPrefix: normalisePath(defaultOptions?.pathPrefix || '/'),
-		markdownItOptions: defaultOptions?.markdownItOptions || { html: true },
+		pathPrefix: normalisePath(ccOptions.pathPrefix || '/'),
+		markdownItOptions: ccOptions.markdownItOptions || { html: true },
 		dir: {
-			input: normalisePath(input || defaultOptions?.dir?.input || '.'),
-			pages: normalisePath(defaultOptions?.dir?.pages || ''), // relative to input
-			data: normalisePath(defaultOptions?.dir?.data || '_data'), // relative to input
-			layouts: normalisePath(defaultOptions?.dir?.layouts || '_includes') // relative to input
+			input: normalisePath(input || ccOptions.dir?.input || '.'),
+			pages: normalisePath(ccOptions.dir?.pages || ''), // relative to input
+			data: normalisePath(ccOptions.dir?.data || '_data'), // relative to input
+			layouts: normalisePath(ccOptions.dir?.layouts || '_includes') // relative to input
 		}
 	};
 

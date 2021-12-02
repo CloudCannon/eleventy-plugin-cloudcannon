@@ -38,7 +38,7 @@ Start by enabling the "Manage eleventy-plugin-cloudcannon plugin manually" optio
 for your site in *Site Settings / Build*.
 
 ```bash
-npm install eleventy-plugin-cloudcannon --save
+npm install --save eleventy-plugin-cloudcannon
 ```
 
 Add the following `addPlugin` call to your `.eleventy.js` file.
@@ -48,7 +48,7 @@ The second parameter is optional, and used to pass [plugin options](#plugin-opti
 const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 
 module.exports = function (eleventyConfig) {
-  const config = {
+  const options = {
     pathPrefix: '/',
     dir: {
       input: '.',
@@ -58,8 +58,8 @@ module.exports = function (eleventyConfig) {
     }
   };
 
-  eleventyConfig.addPlugin(pluginCloudCannon, config);
-  return config;
+  eleventyConfig.addPlugin(pluginCloudCannon, options);
+  return options;
 };
 ```
 
@@ -68,20 +68,27 @@ module.exports = function (eleventyConfig) {
 
 ## Configuration
 
-This plugin uses an optional `cloudcannon.config.*` configuration file as a base to generate
-`_cloudcannon/info.json` (used to integrate your site with CloudCannon).
+This plugin uses an optional configuration file as a base to generate `_cloudcannon/info.json`
+(used to integrate your site with CloudCannon).
 
 Add your global CloudCannon configuration to this file, alongside any optional configuration for
 this plugin.
 
-Configuration files must be in the same directory you run `npx @11ty/eleventy`. The first supported
-file found in this order is used:
+Configuration files should be in the same directory you run `npx @11ty/eleventy`. The first
+supported file found in this order is used:
 
 - `cloudcannon.config.json`
 - `cloudcannon.config.yaml`
 - `cloudcannon.config.yml`
 - `cloudcannon.config.js`
 - `cloudcannon.config.cjs`
+
+Alternatively, use the `CLOUDCANNON_CONFIG_PATH` environment variable to use a specific config file
+in a custom location:
+
+```sh
+$ CLOUDCANNON_CONFIG_PATH=src/cloudcannon.config.js npx @11ty/eleventy
+```
 
 Example content for `cloudcannon.config.cjs`:
 
@@ -213,7 +220,7 @@ set in one of three ways:
 > const pluginCloudCannon = require('eleventy-plugin-cloudcannon');
 >
 > module.exports = function (eleventyConfig) {
->   const config = {
+>   const options = {
 >     pathPrefix: '/',
 >     dir: {
 >       input: '.',
@@ -223,8 +230,8 @@ set in one of three ways:
 >     }
 >   };
 >
->   eleventyConfig.addPlugin(pluginCloudCannon, config);
->   return config;
+>   eleventyConfig.addPlugin(pluginCloudCannon, options);
+>   return options;
 > };
 > ```
 
