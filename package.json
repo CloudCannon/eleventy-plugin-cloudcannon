@@ -10,7 +10,7 @@
     "test:integration": "ava integration-tests/run.test.js --verbose --timeout=60s",
     "lint": "eslint src",
     "release:latest": "npx np",
-    "release:next": "npx np --tag=next"
+    "release:next": "npx np prerelease --tag=next"
   },
   "files": [
     ".eleventy.js",
