@@ -36,10 +36,6 @@ test('0.12.1', async (t) => await run(t, '0.12.1'));
 
 test('1.0.0-beta.8', async (t) => await run(t, '1.0.0-beta.8'));
 
-test.only('1.0.0-beta.8 with output', async (t) => {
-	await run(t, '1.0.0-beta.8-output', 'npx @11ty/eleventy --output=out');
-});
-
 test('1.0.0-beta.8 with file source', async (t) => await run(t, '1.0.0-beta.8-file-source'));
 
 test('1.0.0-beta.8 with source', async (t) => {
