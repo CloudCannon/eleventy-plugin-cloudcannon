@@ -14,8 +14,7 @@
   },
   "files": [
     ".eleventy.js",
-    "src/*",
-    "cloudcannon/*"
+    "src/"
   ],
   "repository": {
     "type": "git",
