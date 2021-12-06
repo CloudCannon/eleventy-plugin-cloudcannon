@@ -55,6 +55,9 @@ function getLegacyConfig(context) {
 
 	const legacy = context.cloudcannon || {};
 	rewriteKey(legacy, 'data', 'data_config');
+	rewriteKey(legacy, '_collection_groups', 'collection_groups');
+	rewriteKey(legacy, '_editor', 'editor');
+	rewriteKey(legacy, '_source_editor', 'source_editor');
 
 	if (legacy.collections) {
 		legacy.collections = Object.keys(legacy.collections).reduce((memo, key) => {
