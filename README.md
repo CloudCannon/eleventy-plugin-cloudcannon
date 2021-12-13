@@ -118,7 +118,7 @@ module.exports = {
       path: 'content/people',
 
       // Whether this collection produces output files or not
-      output: true
+      output: true,
 
       // Collection-level configuration
       name: 'Personnel',
