@@ -1,9 +1,9 @@
 const { mkdirSync, writeFileSync } = require('fs');
 const { dirname, join } = require('path');
-const { bold, green, blue } = require('chalk');
+const { bold, green, blue, red } = require('chalk');
 const { getInfo } = require('./src/generators/info.js');
 const { readConfig } = require('./src/config.js');
-const { log } = require('./src/util/logger.js');
+const { log, logError } = require('./src/util/logger.js');
 const { normalisePath } = require('./src/util/paths.js');
 const { stringifyJson } = require('./src/util/json.js');
 
@@ -20,6 +20,10 @@ layout: null
 // defaultOptions should match the return value from https://www.11ty.dev/docs/config/
 module.exports = function (eleventyConfig, defaultOptions) {
 	const ccOptions = eleventyConfig.cloudcannonOptions || defaultOptions || {};
+
+	if (ccOptions.templateFormats && !ccOptions.templateFormats.includes?.('liquid')) {
+		logError(red('⚠️ Failed: templateFormats needs to include liquid'));
+	}
 
 	const options = {
 		pathPrefix: normalisePath(ccOptions.pathPrefix || '/'),
