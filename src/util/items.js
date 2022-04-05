@@ -61,6 +61,14 @@ function processItem(item, tag, source) {
 		output: item.url !== false
 	};
 
+	if (Object.getOwnPropertyDescriptor(item, 'fileSlug')) {
+		processed.fileSlug = item.fileSlug;
+	}
+
+	if (Object.getOwnPropertyDescriptor(item, 'filePathStem')) {
+		processed.filePathStem = item.filePathStem;
+	}
+
 	if (tag) {
 		processed.collection = tag;
 	}

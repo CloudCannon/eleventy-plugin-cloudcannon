@@ -29,6 +29,8 @@ const staticPage = {
 const page = {
 	data: { title: 'Hi there' },
 	inputPath: './page.html',
+	get fileSlug() { return 'page'; },
+	get filePathStem() { return ''; },
 	url: '/page/',
 	template: {
 		_layoutKey: 'abc',
@@ -57,6 +59,8 @@ const processedPage = {
 	url: '/page/',
 	layout: 'abc',
 	output: true,
+	fileSlug: 'page',
+	filePathStem: '',
 	collection: 'pages'
 };
 

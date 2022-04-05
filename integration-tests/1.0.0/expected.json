@@ -46,6 +46,8 @@
 	"collections": {
 		"authors": [
 			{
+				"filePathStem": "/authors/jane-doe",
+				"fileSlug": "jane-doe",
 				"tags": [
 					"authors"
 				],
@@ -58,6 +60,8 @@
 				"collection": "authors"
 			},
 			{
+				"filePathStem": "/authors/john-doe",
+				"fileSlug": "john-doe",
 				"tags": [
 					"authors"
 				],
@@ -72,6 +76,8 @@
 		],
 		"posts": [
 			{
+				"filePathStem": "/posts/totally-awesome",
+				"fileSlug": "totally-awesome",
 				"layout": "default.njk",
 				"tags": [
 					"posts",
@@ -88,6 +94,8 @@
 				"collection": "posts"
 			},
 			{
+				"filePathStem": "/posts/wicked-cool",
+				"fileSlug": "wicked-cool",
 				"layout": "default.njk",
 				"tags": [
 					"posts"
@@ -105,6 +113,8 @@
 		],
 		"pages": [
 			{
+				"filePathStem": "/pages/about",
+				"fileSlug": "about",
 				"layout": "default.njk",
 				"permalink": "/{{ page.fileSlug }}/",
 				"title": "About",
@@ -115,6 +125,8 @@
 				"collection": "pages"
 			},
 			{
+				"filePathStem": "/pages/blog",
+				"fileSlug": "blog",
 				"layout": "default.njk",
 				"permalink": "/blog/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber + 1 }}/{% endif %}",
 				"title": "Blog",
@@ -124,6 +136,8 @@
 				"collection": "pages"
 			},
 			{
+				"filePathStem": "/pages/index",
+				"fileSlug": "pages",
 				"layout": "default.njk",
 				"permalink": "/",
 				"title": null,
@@ -147,6 +161,8 @@
 				"collection": "pages"
 			},
 			{
+				"filePathStem": "/pages/notes",
+				"fileSlug": "notes",
 				"layout": "default.njk",
 				"permalink": "/{{ page.fileSlug }}/",
 				"title": "The notes!",
@@ -160,7 +176,7 @@
 	"data": {},
 	"generator": {
 		"name": "eleventy",
-		"version": "1.0.0-beta.8",
+		"version": "1.0.0",
 		"environment": "",
 		"metadata": {
 			"markdown": "markdown-it",
