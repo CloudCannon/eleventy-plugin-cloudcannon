@@ -39,7 +39,7 @@ function isIgnoredItemKey(item, key) {
 		|| isEqual(item.template?.templateData?.globalData?.[key], item.data?.[key]);
 }
 
-function processItem(item, tag, source) {
+function processItem(item, collectionKey, source) {
 	if (!item.inputPath) {
 		return;
 	}
@@ -69,8 +69,8 @@ function processItem(item, tag, source) {
 		processed.filePathStem = item.filePathStem;
 	}
 
-	if (tag) {
-		processed.collection = tag;
+	if (collectionKey) {
+		processed.collection = collectionKey;
 	}
 
 	if (item.template?._layoutKey) {

@@ -35,6 +35,27 @@ const collectionItem = {
 	}
 };
 
+const post = {
+	...collectionItem,
+	inputPath: './content/blog/base.html',
+	url: '/blog/base/',
+	data: { tags: ['posts', 'another'] },
+};
+
+const newsPost = {
+	...collectionItem,
+	inputPath: './content/blog/news-event.md',
+	url: '/blog/news-event/',
+	data: { tags: ['posts', 'news'] },
+};
+
+const companyPost = {
+	...collectionItem,
+	inputPath: './company-blog/company-update.liquid',
+	url: '/blog/company-update/',
+	data: { tags: ['posts', 'company'] },
+};
+
 const nonOutputCollectionItem = {
 	...collectionItem,
 	inputPath: './staff/accounting/angela.html',
@@ -105,6 +126,33 @@ const processedStaticPage = {
 	collection: 'pages'
 };
 
+const processedPost = {
+	path: 'content/blog/base.html',
+	url: '/blog/base/',
+	collection: 'blog',
+	output: true,
+	layout: 'abc',
+	tags: ['posts', 'another'],
+};
+
+const processedNewsPost = {
+	path: 'content/blog/news-event.md',
+	collection: 'blog',
+	url: '/blog/news-event/',
+	output: true,
+	layout: 'abc',
+	tags: ['posts', 'news'],
+};
+
+const processedCompanyPost = {
+	path: 'company-blog/company-update.liquid',
+	collection: 'company-blog',
+	url: '/blog/company-update/',
+	output: true,
+	layout: 'abc',
+	tags: ['posts', 'company'],
+};
+
 test('gets collections', (t) => {
 	const context = {
 		collections: {
@@ -113,16 +161,41 @@ test('gets collections', (t) => {
 				unlistedPage,
 				nonOutputPage,
 				collectionItem,
-				staticPage
+				staticPage,
+				post,
+				newsPost,
+				companyPost
 			],
-			staff: [collectionItem]
+			staff: [collectionItem],
+			posts: [post, newsPost, companyPost],
+			news: [newsPost],
+			company: [companyPost]
 		}
 	};
 
 	const collectionsConfig = {
-		pages: { path: '', output: true },
-		staff: { path: 'staff' }
-	}
+		pages: {
+			path: '',
+			output: true,
+			filter: 'strict',
+			auto_discovered: true
+		},
+		staff: {
+			output: true,
+			path: 'staff',
+			auto_discovered: true
+		},
+		'company-blog': {
+			auto_discovered: true,
+			output: true,
+			path: 'company-blog',
+		},
+		blog: {
+			auto_discovered: false,
+			output: true,
+			path: 'content/blog',
+		}
+	};
 
 	t.deepEqual(getCollections(collectionsConfig, context, config), {
 		pages: [
@@ -131,15 +204,27 @@ test('gets collections', (t) => {
 			{ ...processedPage, output: false, url: '' },
 			processedStaticPage
 		],
-		staff: [processedCollectionItem]
+		staff: [
+			processedCollectionItem
+		],
+		'company-blog': [
+			processedCompanyPost
+		],
+		blog: [
+			processedPost,
+			processedNewsPost
+		]
 	});
 });
 
 test('gets collections config', (t) => {
 	const context = {
 		collections: {
-			all: [page, collectionItem, staticPage],
-			staff: [collectionItem]
+			all: [page, collectionItem, staticPage, post, newsPost, companyPost],
+			staff: [collectionItem],
+			posts: [post, newsPost, companyPost],
+			news: [newsPost],
+			company: [companyPost]
 		}
 	};
 
@@ -154,6 +239,49 @@ test('gets collections config', (t) => {
 			output: true,
 			path: 'staff',
 			auto_discovered: true
+		},
+		'company-blog': {
+			auto_discovered: true,
+			output: true,
+			path: 'company-blog',
+		},
+		'content/blog': {
+			auto_discovered: true,
+			output: true,
+			path: 'content/blog',
+		}
+	});
+
+	const specifiedConfig = {
+		...config,
+		collections_config: {
+			blog: {
+				path: 'content/blog'
+			}
+		}
+	};
+
+	t.deepEqual(getCollectionsConfig(context, specifiedConfig), {
+		pages: {
+			path: '',
+			output: true,
+			filter: 'strict',
+			auto_discovered: true
+		},
+		staff: {
+			output: true,
+			path: 'staff',
+			auto_discovered: true
+		},
+		'company-blog': {
+			auto_discovered: true,
+			output: true,
+			path: 'company-blog',
+		},
+		blog: {
+			auto_discovered: false,
+			output: true,
+			path: 'content/blog',
 		}
 	});
 });
@@ -193,7 +321,7 @@ test('gets custom collections config', (t) => {
 		collections_config: {
 			anything: 'here'
 		}
-	}
+	};
 
 	t.deepEqual(getCollectionsConfig(null, customConfig), {
 		anything: 'here'

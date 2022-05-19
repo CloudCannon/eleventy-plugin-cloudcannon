@@ -1,30 +1,21 @@
 const { readdirSync } = require('fs');
 const { dirname, join } = require('path');
-const { bold, yellow } = require('chalk');
+const { bold } = require('chalk');
 const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
 const { getSourcePath, isTopPath } = require('../util/paths.js');
 const { isStaticPage, isPage, hasPages, processItem } = require('../util/items.js');
 
-function cheapPlural(amount, str) {
-	const amountStr = amount === 0 ? 'no' : amount;
-	return `${amountStr} ${str}${amount === 1 ? '' : 's'}`;
-}
-
 // Tests stringify individually to avoid one item breaking it
-function processItems(items, tag, config) {
-	return items?.reduce?.((memo, item) => {
-		const processed = processItem(item, tag, config.source);
-		const stringified = stringifyJson(processed);
+function processCollectionItem(item, collectionKey, config) {
+	const processed = processItem(item, collectionKey, config.source);
+	const stringified = stringifyJson(processed);
 
-		if (stringified === undefined) {
-			log(`⚠️ ${bold(item?.inputPath || 'unknown file')} skipped due to JSON stringify failing`);
-		} else {
-			memo.push(JSON.parse(stringified));
-		}
+	if (stringified !== undefined) {
+		return JSON.parse(stringified);
+	}
 
-		return memo;
-	}, []) || [];
+	log(`⚠️ ${bold(item?.inputPath || 'unknown file')} skipped due to JSON stringify failing`);
 }
 
 function hasDataFiles(dataPath) {
@@ -36,69 +27,87 @@ function hasDataFiles(dataPath) {
 	}
 }
 
-function getCollections(collectionsConfig, context, config) {
-	const { all, ...otherCollections } = context.collections;
+function getCollectionKey(item, collectionsConfig, config) {
+	const sourcePath = getSourcePath(item?.inputPath, config.source) || '';
+	const parts = sourcePath.split('/');
 
-	if (!otherCollections.pages) {
-		otherCollections.pages = all.filter((item) => isPage(item) || isStaticPage(item));
+	// Find collection from config based on explicit path
+	for (let i = parts.length - 1; i >= 0; i--) {
+		const collectionPath = parts.slice(0, i).join('/');
+
+		const configKey = Object.keys(collectionsConfig || {}).find((key) => {
+			return collectionsConfig[key]?.path === collectionPath;
+		});
+
+		if (configKey) {
+			return configKey;
+		}
 	}
 
-	return Object.keys(collectionsConfig).reduce((memo, collectionKey) => {
-		const items = otherCollections[collectionKey];
+	if (isPage(item) || isStaticPage(item)) {
+		return 'pages';
+	}
+}
 
-		if (items?.length) {
-			memo[collectionKey] = processItems(items, collectionKey, config);
-			const filesCount = cheapPlural(memo[collectionKey].length, 'file');
-			log(`📁 Processed ${bold(collectionKey)} collection with ${filesCount}`);
-		} else if (collectionsConfig[collectionKey].auto_discovered) {
-			log(`📂 ${yellow('Ignored')} ${bold(collectionKey)} collection`);
-			delete collectionsConfig[collectionKey];
-		} else {
-			log(`📁 Processed ${bold(collectionKey)} collection`);
+function getCollections(collectionsConfig, context, config) {
+	return context.collections.all.reduce((memo, item) => {
+		const collectionKey = getCollectionKey(item, collectionsConfig, config);
+
+		if (!collectionKey) {
+			log(`⚠️ No collection for ${bold(item?.inputPath || 'unknown file')}`);
+			return memo;
 		}
+
+		const processed = processCollectionItem(item, collectionKey, config);
+
+		memo[collectionKey] = memo[collectionKey] || [];
+		memo[collectionKey].push(processed);
 
 		return memo;
 	}, {});
 }
 
 function discoverCollectionsConfig(context, config) {
-	const { all, ...otherCollections } = context.collections;
-
-	const guessed = all.reduce((memo, item) => {
+	const discovered = context.collections.all.reduce((memo, item) => {
 		const tag = item.data?.tags?.[0];
 
 		if (tag && item.inputPath) {
 			memo[tag] = memo[tag] ?? { basePaths: new Set(), outputOffset: 0 };
 			// Map tags to basePaths, items with same tags can exist in separate folders
-			const inputPath = getSourcePath(item.inputPath, config.source);
-			memo[tag].basePaths.add(dirname(inputPath));
-			// Tracks how collection items are output
+			const sourcePath = getSourcePath(item.inputPath, config.source);
+			memo[tag].basePaths.add(dirname(sourcePath));
+			// Tracks how many collection items are output
 			memo[tag].outputOffset += item.url === false ? -1 : 1;
 		}
 
 		return memo;
 	}, {});
 
-	return Object.keys(guessed).reduce((memo, key) => {
-		if (!otherCollections[key]) {
-			return memo;
-		}
-
+	return Object.keys(discovered).reduce((memo, tag) => {
 		// Finds the top-most common basePaths to prevent sub-folders becoming separate entries
-		const topBasePaths = Array.from(guessed[key].basePaths).filter(isTopPath);
+		const topBasePaths = Array.from(discovered[tag].basePaths).filter(isTopPath);
 
 		// Consider a collection output unless more items are not output
-		const isOutput = guessed[key].outputOffset >= 0;
+		const isOutput = discovered[tag].outputOffset >= 0;
 
 		topBasePaths.forEach((basePath) => {
-			// Multiple collections can share this basePath, but this should cover common use-cases
-			const collectionKey = topBasePaths.length === 1 ? key : basePath;
-			const customPath = memo[collectionKey]?.path;
+			// Finds the existing key for this base path, or creates one
+			// If multiple discovered collections use the same base path, the first one processed is used
+			const collectionKey = Object.keys(memo).find((k) => memo[k].path === basePath)
+				// Use the tag as the collection key if the files are all in one base path
+				|| (topBasePaths.length === 1 ? tag : basePath);
+
+			const existingPath = memo[collectionKey]?.path;
+			const autoDiscovered = !existingPath && existingPath !== '';
+
+			if (autoDiscovered) {
+				log(`🔍 Discovered ${bold(collectionKey)} collection`);
+			}
 
 			memo[collectionKey] = {
 				path: basePath,
 				output: isOutput,
-				auto_discovered: !customPath && customPath !== '',
+				auto_discovered: autoDiscovered,
 				...memo[collectionKey]
 			};
 		});
