@@ -146,7 +146,7 @@ const processedInfo = {
 	version: '0.0.3'
 };
 
-test('gets info', (t) => {
+test('gets info', async (t) => {
 	const context = {
 		pkg: {
 			dependencies: { '@11ty/eleventy': '1' }
@@ -157,7 +157,7 @@ test('gets info', (t) => {
 		}
 	};
 
-	const result = getInfo(context, config);
+	const result = await getInfo(context, config);
 	t.deepEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);

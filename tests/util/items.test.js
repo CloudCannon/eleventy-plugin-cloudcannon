@@ -76,32 +76,32 @@ test('is page', (t) => {
 	t.falsy(isPage(collectionItem));
 });
 
-test('processes item', (t) => {
-	t.deepEqual(processItem(page, 'pages', '.'), processedPage);
+test('processes item', async (t) => {
+	t.deepEqual(await processItem(page, 'pages', '.'), processedPage);
 });
 
-test('processes item in custom source', (t) => {
+test('processes item in custom source', async (t) => {
 	const customPage = {
 		...page,
 		inputPath: './src/page.html'
 	};
 
-	t.deepEqual(processItem(customPage, 'pages', 'src'), processedPage);
+	t.deepEqual(await processItem(customPage, 'pages', 'src'), processedPage);
 });
 
-test('processes invalid item', (t) => {
-	t.is(processItem({}, 'pages', '.'), undefined);
+test('processes invalid item', async (t) => {
+	t.is(await processItem({}, 'pages', '.'), undefined);
 });
 
-test('processes unlisted item', (t) => {
-	t.deepEqual(processItem(unlistedPage, 'pages', '.'), {
+test('processes unlisted item', async (t) => {
+	t.deepEqual(await processItem(unlistedPage, 'pages', '.'), {
 		...processedPage,
 		_unlisted: true
 	});
 });
 
-test('processes non output item', (t) => {
-	t.deepEqual(processItem(nonOutputPage, 'pages', '.'), {
+test('processes non output item', async (t) => {
+	t.deepEqual(await processItem(nonOutputPage, 'pages', '.'), {
 		...processedPage,
 		url: '',
 		output: false

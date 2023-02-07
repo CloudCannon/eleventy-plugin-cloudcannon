@@ -153,7 +153,7 @@ const processedCompanyPost = {
 	tags: ['posts', 'company'],
 };
 
-test('gets collections', (t) => {
+test('gets collections', async (t) => {
 	const context = {
 		collections: {
 			all: [
@@ -197,7 +197,7 @@ test('gets collections', (t) => {
 		}
 	};
 
-	t.deepEqual(getCollections(collectionsConfig, context, config), {
+	t.deepEqual(await getCollections(collectionsConfig, context, config), {
 		pages: [
 			processedPage,
 			{ ...processedPage, _unlisted: true },
