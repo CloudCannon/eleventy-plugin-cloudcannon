@@ -7,8 +7,8 @@ const { getSourcePath, isTopPath } = require('../util/paths.js');
 const { isStaticPage, isPage, hasPages, processItem } = require('../util/items.js');
 
 // Tests stringify individually to avoid one item breaking it
-function processCollectionItem(item, collectionKey, config) {
-	const processed = processItem(item, collectionKey, config.source);
+async function processCollectionItem(item, collectionKey, config) {
+	const processed = await processItem(item, collectionKey, config.source);
 	const stringified = stringifyJson(processed);
 
 	if (stringified !== undefined) {
@@ -49,8 +49,8 @@ function getCollectionKey(item, collectionsConfig, config) {
 	}
 }
 
-function getCollections(collectionsConfig, context, config) {
-	return context.collections.all.reduce((memo, item) => {
+async function getCollections(collectionsConfig, context, config) {
+	return await context.collections.all.reduce(async (memo, item) => {
 		const collectionKey = getCollectionKey(item, collectionsConfig, config);
 
 		if (!collectionKey) {
@@ -58,8 +58,9 @@ function getCollections(collectionsConfig, context, config) {
 			return memo;
 		}
 
-		const processed = processCollectionItem(item, collectionKey, config);
+		const processed = await processCollectionItem(item, collectionKey, config);
 
+		memo = await memo;
 		memo[collectionKey] = memo[collectionKey] || [];
 		memo[collectionKey].push(processed);
 

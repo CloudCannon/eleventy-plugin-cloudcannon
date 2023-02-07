@@ -31,23 +31,26 @@ function isUnlisted(item, source) {
 const IGNORED_ITEM_KEYS = {
 	pagination: true,
 	collections: true,
-	page: true
+	page: true,
+	pkg: true,
+	eleventy: true
 };
 
-function isIgnoredItemKey(item, key) {
+function isIgnoredItemKey(item, key, globalData) {
 	return IGNORED_ITEM_KEYS[key]
-		|| isEqual(item.template?.templateData?.globalData?.[key], item.data?.[key]);
+		|| isEqual(globalData?.[key], item.data?.[key]);
 }
 
-function processItem(item, collectionKey, source) {
+async function processItem(item, collectionKey, source) {
 	if (!item.inputPath) {
 		return;
 	}
 
 	const data = item.data || {};
+	const globalData = await item.template?.templateData?.globalData;
 
 	const combinedData = Object.keys(data).reduce((memo, key) => {
-		if (!isIgnoredItemKey(item, key)) {
+		if (!isIgnoredItemKey(item, key, globalData)) {
 			memo[key] = data[key];
 		}
 

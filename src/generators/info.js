@@ -15,9 +15,9 @@ const cloudcannon = {
 	version: module.exports.version
 };
 
-function getInfo(context, config) {
+async function getInfo(context, config) {
 	const collectionsConfig = getCollectionsConfig(context, config);
-	const collections = getCollections(collectionsConfig, context, config);
+	const collections = await getCollections(collectionsConfig, context, config);
 
 	Object.keys(collectionsConfig).forEach((collectionKey) => {
 		if (collections[collectionKey]?.length) {
@@ -33,8 +33,8 @@ function getInfo(context, config) {
 
 	return {
 		...config,
-		cloudcannon: cloudcannon,
-		collections: collections,
+		cloudcannon,
+		collections,
 		collections_config: collectionsConfig,
 		data: getData(context, config),
 		generator: getGenerator(context, config),

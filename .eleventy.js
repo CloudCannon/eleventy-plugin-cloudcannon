@@ -44,11 +44,11 @@ module.exports = function (eleventyConfig, defaultOptions) {
 	eleventyConfig.addLiquidTag('ccInfo', function (liquidEngine) {
 		return {
 			parse: function () {},
-			render: function (ctx) {
+			render: async function (ctx) {
 				log(`⭐️ Starting ${blue('eleventy-plugin-cloudcannon')}`);
 				const context = ctx.getAll();
 				const config = readConfig(context, options);
-				const info = getInfo(context, config);
+				const info = await getInfo(context, config);
 				const json = stringifyJson(info);
 				log(`🏁 Generated ${bold('_cloudcannon/info.json')} ${green('successfully')}`);
 				return json;

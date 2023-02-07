@@ -51,3 +51,4 @@ test('1.0.0 with source', async (t) => {
 	);
 });
 
+test('2.0.0-beta3', async (t) => await run(t, '2.0.0-beta.3'));
