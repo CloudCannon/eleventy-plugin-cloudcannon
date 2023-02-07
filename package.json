@@ -1,6 +1,6 @@
 {
   "name": "eleventy-plugin-cloudcannon",
-  "version": "1.1.1",
+  "version": "1.1.2-0",
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
