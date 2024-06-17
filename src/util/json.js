@@ -2,17 +2,17 @@ const { configure } = require('safe-stable-stringify');
 
 const stringify = configure({ deterministic: false });
 
-function replacer(key, value) {
-	const isNotPage = !value
-		|| typeof value !== 'object'
-		|| !Object.prototype.hasOwnProperty.call(value, 'template')
-		|| !Object.prototype.hasOwnProperty.call(value, 'inputPath')
-		|| !Object.prototype.hasOwnProperty.call(value, 'fileSlug')
-		|| !Object.prototype.hasOwnProperty.call(value, 'filePathStem')
-		|| !Object.prototype.hasOwnProperty.call(value, 'data')
-		|| !Object.prototype.hasOwnProperty.call(value, 'templateContent');
+function replacer(_key, value) {
+	const isPage = value
+		&& typeof value === 'object'
+		&& Object.prototype.hasOwnProperty.call(value, 'template')
+		&& Object.prototype.hasOwnProperty.call(value, 'inputPath')
+		&& Object.prototype.hasOwnProperty.call(value, 'fileSlug')
+		&& Object.prototype.hasOwnProperty.call(value, 'filePathStem')
+		&& Object.prototype.hasOwnProperty.call(value, 'data')
+		&& Object.prototype.hasOwnProperty.call(value, 'templateContent');
 
-	return isNotPage ? value : '[FILTERED]';
+	return isPage ? '[FILTERED]' : value;
 }
 
 function stringifyJson(obj, fallback) {
