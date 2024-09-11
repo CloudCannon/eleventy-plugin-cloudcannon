@@ -89,6 +89,15 @@ test('processes item in custom source', async (t) => {
 	t.deepEqual(await processItem(customPage, 'pages', 'src'), processedPage);
 });
 
+test('processes item with custom source formatted differently', async (t) => {
+	const customPage = {
+		...page,
+		inputPath: './src/page.html'
+	};
+
+	t.deepEqual(await processItem(customPage, 'pages', '/src'), processedPage);
+});
+
 test('processes invalid item', async (t) => {
 	t.is(await processItem({}, 'pages', '.'), undefined);
 });

@@ -5,6 +5,10 @@ function normalisePath(path) {
 		.replace(/^\.\//g, '');
 }
 
+function removeLeadingAndTrailingSlashes(path) {
+	return path.replace(/^\/|\/$/g, '');
+}
+
 function stripTopPath(path, topPath) {
 	const normalisedTop = normalisePath(topPath);
 	return path.startsWith(normalisedTop) ? path.substring(normalisedTop.length) : path;
@@ -15,7 +19,7 @@ function isTopPath(basePath, index, basePaths) {
 }
 
 function getSourcePath(inputPath, source) {
-	return stripTopPath(normalisePath(inputPath), source).replace(/^\/+/, '');
+	return stripTopPath(normalisePath(inputPath), removeLeadingAndTrailingSlashes(source)).replace(/^\/+/, '');
 }
 
 module.exports = {
