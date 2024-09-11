@@ -6,7 +6,7 @@ function normalisePath(path) {
 }
 
 function removeLeadingAndTrailingSlashes(path) {
-	return path.replace(/^\/|\/$/g, '');
+	return path.replace(/^\/+|\/+$/g, '');
 }
 
 function stripTopPath(path, topPath) {
