@@ -5,6 +5,7 @@ const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
 const { getSourcePath, isTopPath } = require('../util/paths.js');
 const { isStaticPage, isPage, hasPages, processItem } = require('../util/items.js');
+const readFileData = require('../util/read-file-data.js');
 
 // Tests stringify individually to avoid one item breaking it
 async function processCollectionItem(item, collectionKey, config) {
@@ -50,7 +51,7 @@ function getCollectionKey(item, collectionsConfig, config) {
 }
 
 async function getCollections(collectionsConfig, context, config) {
-	return await context.collections.all.reduce(async (memo, item) => {
+	const collections = await context.collections.all.reduce(async (memo, item) => {
 		const collectionKey = getCollectionKey(item, collectionsConfig, config);
 
 		if (!collectionKey) {
@@ -66,6 +67,29 @@ async function getCollections(collectionsConfig, context, config) {
 
 		return memo;
 	}, {});
+
+	for (const [key, collectionConfig] of Object.entries(collectionsConfig)) {
+		if (collections[key] || !collectionConfig.path || collectionConfig.path === '_data') {
+			continue;
+		}
+
+		const path = join(process.cwd(), config.source, collectionConfig.path);
+		const files = readdirSync(path);
+		for (const file of files) {
+			const data = readFileData(join(path, file));
+			if (data) {
+				collections[key] = collections[key] || [];
+				collections[key].push({
+					collection: key,
+					path: join(collectionConfig.path, file),
+					...data,
+				});
+			}
+		}
+		
+	}
+
+	return collections;
 }
 
 function discoverCollectionsConfig(context, config) {
