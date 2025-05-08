@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/cloudcannon/eleventy-plugin-cloudcannon#readme",
   "dependencies": {
-    "chalk": "^4.1.2",
+    "chalk": "^5.4.1",
     "cosmiconfig": "^9.0.0",
     "lodash.isequal": "^4.5.0",
     "pkginfo": "^0.4.1",
