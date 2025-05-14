@@ -1,7 +1,7 @@
 const { getData } = require('./data.js');
 const { getGenerator } = require('./generator.js');
 const { getCollections, getCollectionsConfig } = require('./collections.js');
-const { bold, yellow } = require('chalk');
+const { bold, yellow } = require('ansi-colors');
 const { log } = require('../util/logger.js');
 require('pkginfo')(module, 'name', 'version');
 

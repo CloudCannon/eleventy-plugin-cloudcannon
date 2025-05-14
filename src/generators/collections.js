@@ -1,6 +1,6 @@
 const { readdirSync } = require('fs');
 const { dirname, join } = require('path');
-const { bold } = require('chalk');
+const { bold } = require('ansi-colors');
 const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
 const { getSourcePath, isTopPath } = require('../util/paths.js');
