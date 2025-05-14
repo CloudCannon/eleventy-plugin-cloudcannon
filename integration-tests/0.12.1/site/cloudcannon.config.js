@@ -13,6 +13,11 @@ module.exports = {
 			name: 'The Authors',
 			path: 'authors',
 			output: false
+		},
+		colours: {
+			name: 'Colours',
+			path: 'colours',
+			output: false
 		}
 	}
 };
