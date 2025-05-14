@@ -1,4 +1,4 @@
-const { bold } = require('chalk');
+const { bold } = require('ansi-colors');
 const { log } = require('../util/logger.js');
 
 function getData(context, config) {

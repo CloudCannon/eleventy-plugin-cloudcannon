@@ -1,6 +1,6 @@
 const { mkdirSync, writeFileSync } = require('fs');
 const { dirname, join } = require('path');
-const { bold, green, blue, red } = require('chalk');
+const { bold, green, blue, red } = require('ansi-colors');
 const { getInfo } = require('./src/generators/info.js');
 const { readConfig } = require('./src/config.js');
 const { log, logError } = require('./src/util/logger.js');

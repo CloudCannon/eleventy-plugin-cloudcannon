@@ -1,6 +1,6 @@
 const { relative } = require('path');
 const { cosmiconfigSync } = require('cosmiconfig');
-const { red, bold, yellow } = require('chalk');
+const { red, bold, yellow } = require('ansi-colors');
 const { log, logError } = require('./util/logger.js');
 
 function readFileSync(configPath) {
