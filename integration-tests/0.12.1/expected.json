@@ -12,6 +12,11 @@
 			"auto_discovered": false,
 			"name": "The Authors"
 		},
+     	"colours": {
+			"path": "colours",
+			"output": false,
+       		"name": "Colours"
+     	},
 		"posts": {
 			"path": "posts",
 			"output": true,
@@ -44,6 +49,20 @@
 		"version": "0.0.21"
 	},
 	"collections": {
+		"colours": [
+			{
+				"collection": "colours",
+				"path": "colours/blue.json",
+				"name": "Blue",
+				"hex": "#0000FF"
+			},
+			{
+				"collection": "colours",
+				"path": "colours/red.json",
+				"name": "Red",
+				"hex": "#FF0000"
+			}
+		],
 		"authors": [
 			{
 				"filePathStem": "/authors/jane-doe",
