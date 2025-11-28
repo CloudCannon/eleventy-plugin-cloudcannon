@@ -62,3 +62,6 @@ jobs:
 
       - name: Unit Test
         run: npm run test
+
+      - name: Integration Test
+        run: npm run test:integration

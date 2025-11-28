@@ -1,4 +1,5 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { getCollections, getCollectionsConfig } = require('../../src/generators/collections.js');
 
 const config = {
@@ -153,7 +154,7 @@ const processedCompanyPost = {
 	tags: ['posts', 'company'],
 };
 
-test('gets collections', async (t) => {
+test('gets collections', async () => {
 	const context = {
 		collections: {
 			all: [
@@ -197,7 +198,7 @@ test('gets collections', async (t) => {
 		},
 	};
 
-	t.deepEqual(await getCollections(collectionsConfig, context, config), {
+	assert.deepStrictEqual(await getCollections(collectionsConfig, context, config), {
 		pages: [
 			processedPage,
 			{ ...processedPage, _unlisted: true },
@@ -210,7 +211,7 @@ test('gets collections', async (t) => {
 	});
 });
 
-test('gets collections config', (t) => {
+test('gets collections config', () => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, staticPage, post, newsPost, companyPost],
@@ -221,7 +222,7 @@ test('gets collections config', (t) => {
 		},
 	};
 
-	t.deepEqual(getCollectionsConfig(context, config), {
+	assert.deepStrictEqual(getCollectionsConfig(context, config), {
 		pages: {
 			path: '',
 			output: true,
@@ -254,7 +255,7 @@ test('gets collections config', (t) => {
 		},
 	};
 
-	t.deepEqual(getCollectionsConfig(context, specifiedConfig), {
+	assert.deepStrictEqual(getCollectionsConfig(context, specifiedConfig), {
 		pages: {
 			path: '',
 			output: true,
@@ -279,7 +280,7 @@ test('gets collections config', (t) => {
 	});
 });
 
-test('gets complex collections config', (t) => {
+test('gets complex collections config', () => {
 	const context = {
 		collections: {
 			all: [page, collectionItem, nonOutputCollectionItem, outsideCollectionItem, staticPage],
@@ -288,7 +289,7 @@ test('gets complex collections config', (t) => {
 		},
 	};
 
-	t.deepEqual(getCollectionsConfig(context, config), {
+	assert.deepStrictEqual(getCollectionsConfig(context, config), {
 		'nested/authors': {
 			output: true,
 			path: 'nested/authors',
@@ -308,7 +309,7 @@ test('gets complex collections config', (t) => {
 	});
 });
 
-test('gets custom collections config', (t) => {
+test('gets custom collections config', () => {
 	const customConfig = {
 		collections_config_override: true,
 		collections_config: {
@@ -316,7 +317,7 @@ test('gets custom collections config', (t) => {
 		},
 	};
 
-	t.deepEqual(getCollectionsConfig(null, customConfig), {
+	assert.deepStrictEqual(getCollectionsConfig(null, customConfig), {
 		anything: 'here',
 	});
 });

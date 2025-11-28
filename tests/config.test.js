@@ -1,7 +1,8 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { readConfig } = require('../src/config.js');
 
-test('reads legacy config', (t) => {
+test('reads legacy config', () => {
 	const options = {
 		markdownItOptions: {
 			html: true,
@@ -126,5 +127,5 @@ test('reads legacy config', (t) => {
 
 	const config = readConfig(context, options);
 
-	t.deepEqual(config, expected);
+	assert.deepStrictEqual(config, expected);
 });

@@ -1,4 +1,5 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { getGenerator } = require('../../src/generators/generator.js');
 
 const config = {
@@ -26,23 +27,23 @@ const processedGenerator = {
 	},
 };
 
-test('gets generator', (t) => {
+test('gets generator', () => {
 	const context = {
 		pkg: { dependencies: { '@11ty/eleventy': '1' } },
 	};
 
-	t.deepEqual(getGenerator(context, config), processedGenerator);
+	assert.deepStrictEqual(getGenerator(context, config), processedGenerator);
 
 	const contextDev = {
 		pkg: { devDependencies: { '@11ty/eleventy': '2' } },
 	};
 
-	t.deepEqual(getGenerator(contextDev, config), {
+	assert.deepStrictEqual(getGenerator(contextDev, config), {
 		...processedGenerator,
 		version: '2',
 	});
 
-	t.deepEqual(getGenerator({}, config), {
+	assert.deepStrictEqual(getGenerator({}, config), {
 		...processedGenerator,
 		version: '',
 	});

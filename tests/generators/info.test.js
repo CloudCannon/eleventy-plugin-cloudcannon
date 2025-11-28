@@ -1,4 +1,5 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { getInfo } = require('../../src/generators/info.js');
 require('pkginfo')(module, 'version');
 
@@ -146,7 +147,7 @@ const processedInfo = {
 	version: '0.0.3',
 };
 
-test('gets info', async (t) => {
+test('gets info', async () => {
 	const context = {
 		pkg: {
 			dependencies: { '@11ty/eleventy': '1' },
@@ -158,8 +159,8 @@ test('gets info', async (t) => {
 	};
 
 	const result = await getInfo(context, config);
-	t.deepEqual({ ...result, time: null }, processedInfo);
+	assert.deepStrictEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);
-	t.is(time, new Date().toISOString().substring(0, 10));
+	assert.strictEqual(time, new Date().toISOString().substring(0, 10));
 });

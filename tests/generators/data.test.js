@@ -1,7 +1,8 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { getData } = require('../../src/generators/data.js');
 
-test('gets data', (t) => {
+test('gets data', () => {
 	const context = {
 		things: ['a', 'b', 'c'],
 		nope: { hello: 'there' },
@@ -15,12 +16,12 @@ test('gets data', (t) => {
 		},
 	};
 
-	t.deepEqual(getData(context, customConfig), {
+	assert.deepStrictEqual(getData(context, customConfig), {
 		things: ['a', 'b', 'c'],
 		stuff: {},
 	});
 });
 
-test('get no data', (t) => {
-	t.deepEqual(getData({}, {}), {});
+test('get no data', () => {
+	assert.deepStrictEqual(getData({}, {}), {});
 });

@@ -1,19 +1,20 @@
-const test = require('ava');
+const { test } = require('node:test');
+const assert = require('node:assert');
 const { stringifyJson } = require('../../src/util/json.js');
 
-test('stringifies json', (t) => {
-	t.is(stringifyJson({ hello: 'there' }), '{\n\t"hello": "there"\n}');
+test('stringifies json', () => {
+	assert.strictEqual(stringifyJson({ hello: 'there' }), '{\n\t"hello": "there"\n}');
 });
 
-test('stringifies circular json', (t) => {
+test('stringifies circular json', () => {
 	const circular = { hello: 'there' };
 	circular.oops = circular;
 
 	const expected = '{\n\t"hello": "there",\n\t"oops": "[Circular]"\n}';
-	t.is(stringifyJson(circular), expected);
+	assert.strictEqual(stringifyJson(circular), expected);
 });
 
-test('stringifies pages in json', (t) => {
+test('stringifies pages in json', () => {
 	const hugeObjects = {
 		title: 'My page',
 		otherPages: [
@@ -45,5 +46,5 @@ test('stringifies pages in json', (t) => {
 		'\t'
 	);
 
-	t.is(stringifyJson(hugeObjects), expected);
+	assert.strictEqual(stringifyJson(hugeObjects), expected);
 });
