@@ -15,5 +15,5 @@ function getData(context, config) {
 }
 
 module.exports = {
-	getData
+	getData,
 };

@@ -1,5 +1,5 @@
-const { readdirSync } = require('fs');
-const { dirname, join } = require('path');
+const { readdirSync } = require('node:fs');
+const { dirname, join } = require('node:path');
 const { bold } = require('ansi-colors');
 const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
@@ -84,37 +84,41 @@ function discoverCollectionsConfig(context, config) {
 		return memo;
 	}, {});
 
-	return Object.keys(discovered).reduce((memo, tag) => {
-		// Finds the top-most common basePaths to prevent sub-folders becoming separate entries
-		const topBasePaths = Array.from(discovered[tag].basePaths).filter(isTopPath);
+	return Object.keys(discovered).reduce(
+		(memo, tag) => {
+			// Finds the top-most common basePaths to prevent sub-folders becoming separate entries
+			const topBasePaths = Array.from(discovered[tag].basePaths).filter(isTopPath);
 
-		// Consider a collection output unless more items are not output
-		const isOutput = discovered[tag].outputOffset >= 0;
+			// Consider a collection output unless more items are not output
+			const isOutput = discovered[tag].outputOffset >= 0;
 
-		topBasePaths.forEach((basePath) => {
-			// Finds the existing key for this base path, or creates one
-			// If multiple discovered collections use the same base path, the first one processed is used
-			const collectionKey = Object.keys(memo).find((k) => memo[k].path === basePath)
-				// Use the tag as the collection key if the files are all in one base path
-				|| (topBasePaths.length === 1 ? tag : basePath);
+			topBasePaths.forEach((basePath) => {
+				// Finds the existing key for this base path, or creates one
+				// If multiple discovered collections use the same base path, the first one processed is used
+				const collectionKey =
+					Object.keys(memo).find((k) => memo[k].path === basePath) ||
+					// Use the tag as the collection key if the files are all in one base path
+					(topBasePaths.length === 1 ? tag : basePath);
 
-			const existingPath = memo[collectionKey]?.path;
-			const autoDiscovered = !existingPath && existingPath !== '';
+				const existingPath = memo[collectionKey]?.path;
+				const autoDiscovered = !existingPath && existingPath !== '';
 
-			if (autoDiscovered) {
-				log(`🔍 Discovered ${bold(collectionKey)} collection`);
-			}
+				if (autoDiscovered) {
+					log(`🔍 Discovered ${bold(collectionKey)} collection`);
+				}
 
-			memo[collectionKey] = {
-				path: basePath,
-				output: isOutput,
-				auto_discovered: autoDiscovered,
-				...memo[collectionKey]
-			};
-		});
+				memo[collectionKey] = {
+					path: basePath,
+					output: isOutput,
+					auto_discovered: autoDiscovered,
+					...memo[collectionKey],
+				};
+			});
 
-		return memo;
-	}, { ...config.collections_config });
+			return memo;
+		},
+		{ ...config.collections_config }
+	);
 }
 
 function getCollectionsConfig(context, config) {
@@ -129,7 +133,7 @@ function getCollectionsConfig(context, config) {
 			path: config.paths.data,
 			output: false,
 			auto_discovered: false, // Ensures this stays in collections_config
-			...collectionsConfig?.data
+			...collectionsConfig?.data,
 		};
 	}
 
@@ -142,7 +146,7 @@ function getCollectionsConfig(context, config) {
 			output: true,
 			filter: 'strict',
 			auto_discovered: !pagesPath && pagesPath !== '',
-			...collectionsConfig.pages
+			...collectionsConfig.pages,
 		};
 	}
 
@@ -151,5 +155,5 @@ function getCollectionsConfig(context, config) {
 
 module.exports = {
 	getCollections,
-	getCollectionsConfig
+	getCollectionsConfig,
 };

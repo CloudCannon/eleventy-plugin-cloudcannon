@@ -6,51 +6,55 @@ const collectionItem = {
 	url: '/staff/pete/',
 	data: {
 		tags: ['staff', 'another'],
-		seo: { should: 'not be output' }
+		seo: { should: 'not be output' },
 	},
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const staticPage = {
 	inputPath: './static.html',
 	url: '/static/',
 	template: { _layoutKey: null },
-	data: {}
+	data: {},
 };
 
 const page = {
 	data: { title: 'Hi there' },
 	inputPath: './page.html',
-	get fileSlug() { return 'page'; },
-	get filePathStem() { return ''; },
+	get fileSlug() {
+		return 'page';
+	},
+	get filePathStem() {
+		return '';
+	},
 	url: '/page/',
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const unlistedPage = {
 	...page,
-	data: { ...page.data, _unlisted: true }
+	data: { ...page.data, _unlisted: true },
 };
 
 const nonOutputPage = {
 	...page,
-	url: false
+	url: false,
 };
 
 const processedPage = {
@@ -61,7 +65,7 @@ const processedPage = {
 	output: true,
 	fileSlug: 'page',
 	filePathStem: '',
-	collection: 'pages'
+	collection: 'pages',
 };
 
 test('is static page', (t) => {
@@ -83,7 +87,7 @@ test('processes item', async (t) => {
 test('processes item in custom source', async (t) => {
 	const customPage = {
 		...page,
-		inputPath: './src/page.html'
+		inputPath: './src/page.html',
 	};
 
 	t.deepEqual(await processItem(customPage, 'pages', 'src'), processedPage);
@@ -92,7 +96,7 @@ test('processes item in custom source', async (t) => {
 test('processes item with custom source formatted differently', async (t) => {
 	const customPage = {
 		...page,
-		inputPath: './src/page.html'
+		inputPath: './src/page.html',
 	};
 
 	t.deepEqual(await processItem(customPage, 'pages', '/src'), processedPage);
@@ -105,7 +109,7 @@ test('processes invalid item', async (t) => {
 test('processes unlisted item', async (t) => {
 	t.deepEqual(await processItem(unlistedPage, 'pages', '.'), {
 		...processedPage,
-		_unlisted: true
+		_unlisted: true,
 	});
 });
 
@@ -113,6 +117,6 @@ test('processes non output item', async (t) => {
 	t.deepEqual(await processItem(nonOutputPage, 'pages', '.'), {
 		...processedPage,
 		url: '',
-		output: false
+		output: false,
 	});
 });

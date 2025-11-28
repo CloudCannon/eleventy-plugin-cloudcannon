@@ -1,8 +1,5 @@
 function normalisePath(path) {
-	return path
-		.replace(/\/+/g, '/')
-		.replace(/^\.$/, '')
-		.replace(/^\.\//g, '');
+	return path.replace(/\/+/g, '/').replace(/^\.$/, '').replace(/^\.\//g, '');
 }
 
 function removeLeadingAndTrailingSlashes(path) {
@@ -14,17 +11,20 @@ function stripTopPath(path, topPath) {
 	return path.startsWith(normalisedTop) ? path.substring(normalisedTop.length) : path;
 }
 
-function isTopPath(basePath, index, basePaths) {
+function isTopPath(basePath, _index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
 
 function getSourcePath(inputPath, source) {
-	return stripTopPath(normalisePath(inputPath), removeLeadingAndTrailingSlashes(source)).replace(/^\/+/, '');
+	return stripTopPath(normalisePath(inputPath), removeLeadingAndTrailingSlashes(source)).replace(
+		/^\/+/,
+		''
+	);
 }
 
 module.exports = {
 	normalisePath,
 	stripTopPath,
 	isTopPath,
-	getSourcePath
+	getSourcePath,
 };

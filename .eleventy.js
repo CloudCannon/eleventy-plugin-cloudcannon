@@ -1,5 +1,5 @@
-const { mkdirSync, writeFileSync } = require('fs');
-const { dirname, join } = require('path');
+const { mkdirSync, writeFileSync } = require('node:fs');
+const { dirname, join } = require('node:path');
 const { bold, green, blue, red } = require('ansi-colors');
 const { getInfo } = require('./src/generators/info.js');
 const { readConfig } = require('./src/config.js');
@@ -18,7 +18,7 @@ layout: null
 `;
 
 // defaultOptions should match the return value from https://www.11ty.dev/docs/config/
-module.exports = function (eleventyConfig, defaultOptions) {
+module.exports = (eleventyConfig, defaultOptions) => {
 	const ccOptions = eleventyConfig.cloudcannonOptions || defaultOptions || {};
 
 	if (ccOptions.templateFormats && !ccOptions.templateFormats.includes?.('liquid')) {
@@ -32,8 +32,8 @@ module.exports = function (eleventyConfig, defaultOptions) {
 			input: normalisePath(input || ccOptions.dir?.input || '.'),
 			pages: normalisePath(ccOptions.dir?.pages || ''), // relative to input
 			data: normalisePath(ccOptions.dir?.data || '_data'), // relative to input
-			layouts: normalisePath(ccOptions.dir?.layouts || '_includes') // relative to input
-		}
+			layouts: normalisePath(ccOptions.dir?.layouts || '_includes'), // relative to input
+		},
 	};
 
 	// Create the template file for Eleventy to process and call the ccInfo tag
@@ -41,18 +41,16 @@ module.exports = function (eleventyConfig, defaultOptions) {
 	mkdirSync(dirname(templatePath), { recursive: true });
 	writeFileSync(templatePath, infoTemplate);
 
-	eleventyConfig.addLiquidTag('ccInfo', function (liquidEngine) {
-		return {
-			parse: function () {},
-			render: async function (ctx) {
-				log(`⭐️ Starting ${blue('eleventy-plugin-cloudcannon')}`);
-				const context = ctx.getAll();
-				const config = readConfig(context, options);
-				const info = await getInfo(context, config);
-				const json = stringifyJson(info);
-				log(`🏁 Generated ${bold('_cloudcannon/info.json')} ${green('successfully')}`);
-				return json;
-			}
-		};
-	});
+	eleventyConfig.addLiquidTag('ccInfo', (_liquidEngine) => ({
+		parse: () => {},
+		render: async (ctx) => {
+			log(`⭐️ Starting ${blue('eleventy-plugin-cloudcannon')}`);
+			const context = ctx.getAll();
+			const config = readConfig(context, options);
+			const info = await getInfo(context, config);
+			const json = stringifyJson(info);
+			log(`🏁 Generated ${bold('_cloudcannon/info.json')} ${green('successfully')}`);
+			return json;
+		},
+	}));
 };

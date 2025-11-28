@@ -1,12 +1,14 @@
-const { dirname, basename, extname } = require('path');
+const { dirname, basename, extname } = require('node:path');
 const isEqual = require('lodash.isequal');
 const { getSourcePath } = require('../util/paths.js');
 
 function isStaticPage(item) {
-	return item.template
-		&& !item.template?._layoutKey
-		&& !item.data?.tags?.length
-		&& extname(item.inputPath || '') === '.html';
+	return (
+		item.template &&
+		!item.template?._layoutKey &&
+		!item.data?.tags?.length &&
+		extname(item.inputPath || '') === '.html'
+	);
 }
 
 function isPage(item) {
@@ -33,12 +35,11 @@ const IGNORED_ITEM_KEYS = {
 	collections: true,
 	page: true,
 	pkg: true,
-	eleventy: true
+	eleventy: true,
 };
 
 function isIgnoredItemKey(item, key, globalData) {
-	return IGNORED_ITEM_KEYS[key]
-		|| isEqual(globalData?.[key], item.data?.[key]);
+	return IGNORED_ITEM_KEYS[key] || isEqual(globalData?.[key], item.data?.[key]);
 }
 
 async function processItem(item, collectionKey, source) {
@@ -61,7 +62,7 @@ async function processItem(item, collectionKey, source) {
 		...combinedData,
 		path: getSourcePath(item.inputPath, source),
 		url: item.url || '',
-		output: item.url !== false
+		output: item.url !== false,
 	};
 
 	if (Object.getOwnPropertyDescriptor(item, 'fileSlug')) {
@@ -91,5 +92,5 @@ module.exports = {
 	isStaticPage,
 	isPage,
 	hasPages,
-	processItem
+	processItem,
 };

@@ -3,7 +3,7 @@ const { getCollections, getCollectionsConfig } = require('../../src/generators/c
 
 const config = {
 	_select_data: {
-		shrutes: ['Dwight', 'Mose']
+		shrutes: ['Dwight', 'Mose'],
 	},
 	base_url: '',
 	paths: {
@@ -14,7 +14,7 @@ const config = {
 		static: '',
 		uploads: 'uploads',
 	},
-	source: ''
+	source: '',
 };
 
 const collectionItem = {
@@ -22,17 +22,17 @@ const collectionItem = {
 	url: '/staff/pete/',
 	data: {
 		tags: ['staff', 'another'],
-		seo: { should: 'not be output' }
+		seo: { should: 'not be output' },
 	},
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const post = {
@@ -59,20 +59,20 @@ const companyPost = {
 const nonOutputCollectionItem = {
 	...collectionItem,
 	inputPath: './staff/accounting/angela.html',
-	url: false
+	url: false,
 };
 
 const outsideCollectionItem = {
 	...collectionItem,
 	inputPath: './nested/authors/jane.html',
-	url: '/staff/jane/'
+	url: '/staff/jane/',
 };
 
 const staticPage = {
 	inputPath: './static.html',
 	url: '/static/',
 	template: { _layoutKey: null },
-	data: {}
+	data: {},
 };
 
 const page = {
@@ -84,20 +84,20 @@ const page = {
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const unlistedPage = {
 	...page,
-	data: { ...page.data, _unlisted: true }
+	data: { ...page.data, _unlisted: true },
 };
 
 const nonOutputPage = {
 	...page,
-	url: false
+	url: false,
 };
 
 const processedCollectionItem = {
@@ -107,7 +107,7 @@ const processedCollectionItem = {
 	url: '/staff/pete/',
 	output: true,
 	collection: 'staff',
-	layout: 'abc'
+	layout: 'abc',
 };
 
 const processedPage = {
@@ -116,14 +116,14 @@ const processedPage = {
 	url: '/page/',
 	layout: 'abc',
 	output: true,
-	collection: 'pages'
+	collection: 'pages',
 };
 
 const processedStaticPage = {
 	path: 'static.html',
 	url: '/static/',
 	output: true,
-	collection: 'pages'
+	collection: 'pages',
 };
 
 const processedPost = {
@@ -164,13 +164,13 @@ test('gets collections', async (t) => {
 				staticPage,
 				post,
 				newsPost,
-				companyPost
+				companyPost,
 			],
 			staff: [collectionItem],
 			posts: [post, newsPost, companyPost],
 			news: [newsPost],
-			company: [companyPost]
-		}
+			company: [companyPost],
+		},
 	};
 
 	const collectionsConfig = {
@@ -178,12 +178,12 @@ test('gets collections', async (t) => {
 			path: '',
 			output: true,
 			filter: 'strict',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		staff: {
 			output: true,
 			path: 'staff',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		'company-blog': {
 			auto_discovered: true,
@@ -194,7 +194,7 @@ test('gets collections', async (t) => {
 			auto_discovered: false,
 			output: true,
 			path: 'content/blog',
-		}
+		},
 	};
 
 	t.deepEqual(await getCollections(collectionsConfig, context, config), {
@@ -202,18 +202,11 @@ test('gets collections', async (t) => {
 			processedPage,
 			{ ...processedPage, _unlisted: true },
 			{ ...processedPage, output: false, url: '' },
-			processedStaticPage
+			processedStaticPage,
 		],
-		staff: [
-			processedCollectionItem
-		],
-		'company-blog': [
-			processedCompanyPost
-		],
-		blog: [
-			processedPost,
-			processedNewsPost
-		]
+		staff: [processedCollectionItem],
+		'company-blog': [processedCompanyPost],
+		blog: [processedPost, processedNewsPost],
 	});
 });
 
@@ -224,8 +217,8 @@ test('gets collections config', (t) => {
 			staff: [collectionItem],
 			posts: [post, newsPost, companyPost],
 			news: [newsPost],
-			company: [companyPost]
-		}
+			company: [companyPost],
+		},
 	};
 
 	t.deepEqual(getCollectionsConfig(context, config), {
@@ -233,12 +226,12 @@ test('gets collections config', (t) => {
 			path: '',
 			output: true,
 			filter: 'strict',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		staff: {
 			output: true,
 			path: 'staff',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		'company-blog': {
 			auto_discovered: true,
@@ -249,16 +242,16 @@ test('gets collections config', (t) => {
 			auto_discovered: true,
 			output: true,
 			path: 'content/blog',
-		}
+		},
 	});
 
 	const specifiedConfig = {
 		...config,
 		collections_config: {
 			blog: {
-				path: 'content/blog'
-			}
-		}
+				path: 'content/blog',
+			},
+		},
 	};
 
 	t.deepEqual(getCollectionsConfig(context, specifiedConfig), {
@@ -266,12 +259,12 @@ test('gets collections config', (t) => {
 			path: '',
 			output: true,
 			filter: 'strict',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		staff: {
 			output: true,
 			path: 'staff',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		'company-blog': {
 			auto_discovered: true,
@@ -282,7 +275,7 @@ test('gets collections config', (t) => {
 			auto_discovered: false,
 			output: true,
 			path: 'content/blog',
-		}
+		},
 	});
 });
 
@@ -291,27 +284,27 @@ test('gets complex collections config', (t) => {
 		collections: {
 			all: [page, collectionItem, nonOutputCollectionItem, outsideCollectionItem, staticPage],
 			another: [collectionItem],
-			staff: [collectionItem, nonOutputCollectionItem, outsideCollectionItem]
-		}
+			staff: [collectionItem, nonOutputCollectionItem, outsideCollectionItem],
+		},
 	};
 
 	t.deepEqual(getCollectionsConfig(context, config), {
 		'nested/authors': {
 			output: true,
 			path: 'nested/authors',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		pages: {
 			path: '',
 			output: true,
 			filter: 'strict',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		staff: {
 			output: true,
 			path: 'staff',
-			auto_discovered: true
-		}
+			auto_discovered: true,
+		},
 	});
 });
 
@@ -319,11 +312,11 @@ test('gets custom collections config', (t) => {
 	const customConfig = {
 		collections_config_override: true,
 		collections_config: {
-			anything: 'here'
-		}
+			anything: 'here',
+		},
 	};
 
 	t.deepEqual(getCollectionsConfig(null, customConfig), {
-		anything: 'here'
+		anything: 'here',
 	});
 });

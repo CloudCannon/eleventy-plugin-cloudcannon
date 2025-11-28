@@ -1,4 +1,4 @@
-const { relative } = require('path');
+const { relative } = require('node:path');
 const { cosmiconfigSync } = require('cosmiconfig');
 const { red, bold, yellow } = require('ansi-colors');
 const { log, logError } = require('./util/logger.js');
@@ -11,14 +11,12 @@ function readFileSync(configPath) {
 			`${moduleName}.config.yaml`,
 			`${moduleName}.config.yml`,
 			`${moduleName}.config.js`,
-			`${moduleName}.config.cjs`
-		]
+			`${moduleName}.config.cjs`,
+		],
 	});
 
 	try {
-		const config = configPath
-			? explorerSync.load(configPath)
-			: explorerSync.search();
+		const config = configPath ? explorerSync.load(configPath) : explorerSync.search();
 
 		if (config) {
 			const cwd = process.cwd();
@@ -73,7 +71,8 @@ function getLegacyConfig(context) {
 			rewriteKey(collectionConfig, '_icon', 'icon');
 			rewriteKey(collectionConfig, '_add_options', 'add_options');
 
-			return { ...memo, [key]: collectionConfig };
+			memo[key] = collectionConfig;
+			return memo;
 		}, {});
 
 		rewriteKey(legacy, 'collections', 'collections_config');
@@ -100,8 +99,8 @@ function readConfig(context, options = {}) {
 			data: file.paths?.data || options.dir?.data || '_data',
 			collections: '',
 			pages: file.paths?.pages || options.dir?.pages || '',
-			layouts: file.paths?.layouts || options.dir?.layouts || '_includes'
-		}
+			layouts: file.paths?.layouts || options.dir?.layouts || '_includes',
+		},
 	};
 
 	if (options.markdownItOptions) {
@@ -109,8 +108,8 @@ function readConfig(context, options = {}) {
 			...config.generator,
 			metadata: {
 				markdown: 'markdown-it',
-				'markdown-it': options.markdownItOptions
-			}
+				'markdown-it': options.markdownItOptions,
+			},
 		};
 	}
 
@@ -122,5 +121,5 @@ function readConfig(context, options = {}) {
 }
 
 module.exports = {
-	readConfig
+	readConfig,
 };

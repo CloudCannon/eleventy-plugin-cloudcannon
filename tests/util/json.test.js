@@ -31,17 +31,19 @@ test('stringifies pages in json', (t) => {
 				},
 				get templateContent() {
 					throw new Error('How dare you!');
-				}
-			}
-		]
+				},
+			},
+		],
 	};
 
-	const expected = JSON.stringify({
-		title: 'My page',
-		otherPages: [
-			'[FILTERED]'
-		],
-	}, null, '\t');
+	const expected = JSON.stringify(
+		{
+			title: 'My page',
+			otherPages: ['[FILTERED]'],
+		},
+		null,
+		'\t'
+	);
 
 	t.is(stringifyJson(hugeObjects), expected);
 });

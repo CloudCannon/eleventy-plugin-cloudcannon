@@ -7,6 +7,34 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Lint
+    runs-on: ${{matrix.os}}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        include:
+          - build: linux
+            os: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version-file: ".nvmrc"
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
   test:
     name: Test
     runs-on: ${{matrix.os}}
@@ -24,8 +52,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Install 
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version-file: ".nvmrc"
+
+      - name: Install
         run: npm ci
 
-      - name: Unit Test 
+      - name: Unit Test
         run: npm run test

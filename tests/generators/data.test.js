@@ -11,13 +11,13 @@ test('gets data', (t) => {
 		data_config: {
 			things: true,
 			stuff: true,
-			nope: false
-		}
+			nope: false,
+		},
 	};
 
 	t.deepEqual(getData(context, customConfig), {
 		things: ['a', 'b', 'c'],
-		stuff: {}
+		stuff: {},
 	});
 });
 
