@@ -4,16 +4,14 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "release:latest": "npx np",
-    "release:next": "npx np prerelease --tag=next",
     "lint:format": "biome check --fix",
     "lint:report": "biome lint --diagnostic-level=error --reporter=junit > lint-results.xml",
     "lint:staged": "biome check --diagnostic-level=error --staged --no-errors-on-unmatched",
-    "site:dev": "http-server site -p 12345 -c-1",
-    "site:build": "cp dist/*.schema.json site/.",
-    "test": "node --experimental-strip-types --test",
+    "test": "node  --experimental-strip-types --test tests/**/*",
+    "test:integration": "node --experimental-strip-types --test integration-tests/**/*",
     "test:watch": "node --experimental-strip-types --test --watch",
-    "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info"
+    "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
+    "release:latest": "npx np"
   },
   "files": [
     ".eleventy.js",

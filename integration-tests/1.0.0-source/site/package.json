@@ -3,7 +3,7 @@
 	"private": "true",
 	"version": "0.0.1",
 	"description": "test eleventy website",
-	"main": ".eleventy.js",
+	"main": "src/.eleventy.js",
 	"scripts": {
 		"start": "eleventy"
 	},
