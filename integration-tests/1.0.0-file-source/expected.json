@@ -48,9 +48,7 @@
 			{
 				"filePathStem": "/authors/jane-doe",
 				"fileSlug": "jane-doe",
-				"tags": [
-					"authors"
-				],
+				"tags": ["authors"],
 				"permalink": false,
 				"name": "Jane Doe",
 				"description": "Tall",
@@ -62,9 +60,7 @@
 			{
 				"filePathStem": "/authors/john-doe",
 				"fileSlug": "john-doe",
-				"tags": [
-					"authors"
-				],
+				"tags": ["authors"],
 				"permalink": false,
 				"name": "John Doe",
 				"description": "Very tall",
@@ -79,10 +75,7 @@
 				"filePathStem": "/posts/totally-awesome",
 				"fileSlug": "totally-awesome",
 				"layout": "default.njk",
-				"tags": [
-					"posts",
-					"News"
-				],
+				"tags": ["posts", "News"],
 				"permalink": "/posts/{{ page.fileSlug }}/",
 				"title": "Totally awesome",
 				"date": "2021-08-10T00:00:00.000Z",
@@ -97,9 +90,7 @@
 				"filePathStem": "/posts/wicked-cool",
 				"fileSlug": "wicked-cool",
 				"layout": "default.njk",
-				"tags": [
-					"posts"
-				],
+				"tags": ["posts"],
 				"permalink": "/posts/{{ page.fileSlug }}/",
 				"title": "Wicked cool",
 				"date": "2021-12-11T00:00:00.000Z",
@@ -159,7 +150,6 @@
 				"url": "/",
 				"output": true,
 				"collection": "pages"
-
 			},
 			{
 				"filePathStem": "/pages/notes",

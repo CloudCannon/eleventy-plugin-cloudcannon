@@ -8,5 +8,5 @@ function logError(str) {
 
 module.exports = {
 	log,
-	logError
+	logError,
 };

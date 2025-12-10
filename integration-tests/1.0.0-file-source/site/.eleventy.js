@@ -8,7 +8,9 @@ module.exports = function (eleventyConfig) {
 		const authors = collectionApi.getFilteredByTag('authors');
 
 		return collectionApi.getFilteredByTag('posts').map((post) => {
-			post.data.authorItem = authors.find((author) => author.inputPath === `./src${post.data.author}`);
+			post.data.authorItem = authors.find(
+				(author) => author.inputPath === `./src${post.data.author}`
+			);
 			return post;
 		});
 	});
@@ -16,8 +18,8 @@ module.exports = function (eleventyConfig) {
 	const options = {
 		dir: {
 			input: 'src',
-			pages: 'pages'
-		}
+			pages: 'pages',
+		},
 	};
 
 	eleventyConfig.addPlugin(pluginCloudCannon, options);

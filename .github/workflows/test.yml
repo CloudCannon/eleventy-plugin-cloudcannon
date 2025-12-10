@@ -24,8 +24,42 @@ jobs:
         with:
           fetch-depth: 1
 
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version-file: '.nvmrc'
+
       - name: Install 
         run: npm ci
 
       - name: Unit Test 
         run: npm run test
+
+  lint:
+    name: Lint
+    runs-on: ${{matrix.os}}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        include:
+          - build: linux
+            os: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: "npm"
+          node-version-file: '.nvmrc'
+
+      - name: Install
+        run: |
+          npm ci
+
+      - name: Lint Javascript
+        run: npm run lint:format

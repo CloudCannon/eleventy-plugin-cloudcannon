@@ -1,4 +1,5 @@
-const test = require('ava');
+const assert = require('node:assert');
+const { test } = require('node:test');
 const { getInfo } = require('../../src/generators/info.js');
 require('pkginfo')(module, 'version');
 
@@ -10,12 +11,12 @@ const config = {
 			markdown: 'markdown-it',
 			'markdown-it': {
 				html: true,
-				linkify: true
-			}
-		}
+				linkify: true,
+			},
+		},
 	},
 	_select_data: {
-		shrutes: ['Dwight', 'Mose']
+		shrutes: ['Dwight', 'Mose'],
 	},
 	base_url: '',
 	paths: {
@@ -26,7 +27,7 @@ const config = {
 		static: '',
 		uploads: 'uploads',
 	},
-	source: ''
+	source: '',
 };
 
 const collectionItem = {
@@ -34,24 +35,24 @@ const collectionItem = {
 	url: '/staff/pete/',
 	data: {
 		tags: ['staff', 'another'],
-		seo: { should: 'not be output' }
+		seo: { should: 'not be output' },
 	},
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const staticPage = {
 	inputPath: './static.html',
 	url: '/static/',
 	template: { _layoutKey: null },
-	data: {}
+	data: {},
 };
 
 const page = {
@@ -63,10 +64,10 @@ const page = {
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const processedCollectionItem = {
@@ -76,7 +77,7 @@ const processedCollectionItem = {
 	url: '/staff/pete/',
 	output: true,
 	collection: 'staff',
-	layout: 'abc'
+	layout: 'abc',
 };
 
 const processedPage = {
@@ -85,14 +86,14 @@ const processedPage = {
 	url: '/page/',
 	layout: 'abc',
 	output: true,
-	collection: 'pages'
+	collection: 'pages',
 };
 
 const processedStaticPage = {
 	path: 'static.html',
 	url: '/static/',
 	output: true,
-	collection: 'pages'
+	collection: 'pages',
 };
 
 const processedGenerator = {
@@ -103,63 +104,63 @@ const processedGenerator = {
 		markdown: 'markdown-it',
 		'markdown-it': {
 			html: true,
-			linkify: true
-		}
-	}
+			linkify: true,
+		},
+	},
 };
 
 const processedPaths = {
-	...config.paths
+	...config.paths,
 };
 
 const processedInfo = {
 	_select_data: {
-		shrutes: ['Dwight', 'Mose']
+		shrutes: ['Dwight', 'Mose'],
 	},
 	base_url: '',
 	cloudcannon: {
 		name: 'eleventy-plugin-cloudcannon',
-		version: version
+		version: version,
 	},
 	collections: {
 		pages: [processedPage, processedStaticPage],
-		staff: [processedCollectionItem]
+		staff: [processedCollectionItem],
 	},
 	collections_config: {
 		pages: {
 			path: '',
 			output: true,
 			filter: 'strict',
-			auto_discovered: true
+			auto_discovered: true,
 		},
 		staff: {
 			output: true,
 			path: 'staff',
-			auto_discovered: true
-		}
+			auto_discovered: true,
+		},
 	},
 	data: {},
 	generator: processedGenerator,
 	paths: processedPaths,
 	source: '',
 	time: null,
-	version: '0.0.3'
+	version: '0.0.3',
 };
 
-test('gets info', async (t) => {
+test('gets info', async () => {
 	const context = {
 		pkg: {
-			dependencies: { '@11ty/eleventy': '1' }
+			dependencies: { '@11ty/eleventy': '1' },
 		},
 		collections: {
 			all: [page, collectionItem, staticPage],
-			staff: [collectionItem]
-		}
+			staff: [collectionItem],
+		},
 	};
 
 	const result = await getInfo(context, config);
-	t.deepEqual({ ...result, time: null }, processedInfo);
+	assert.deepStrictEqual({ ...result, time: null }, processedInfo);
 
 	const time = result.time.substring(0, 10);
-	t.is(time, new Date().toISOString().substring(0, 10));
+	assert.equal(time, new Date().toISOString().substring(0, 10));
 });

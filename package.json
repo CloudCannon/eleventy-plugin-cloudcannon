@@ -4,11 +4,13 @@
   "description": "Eleventy plugin to create CloudCannon editor details",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "ava 'tests/**/*' --verbose",
-    "test:watch": "ava 'tests/**/*' --watch --verbose",
-    "test:coverage": "c8 --all --src=src ava 'tests/**/*' --verbose",
-    "test:integration": "ava integration-tests/run.test.js --verbose --timeout=60s",
-    "lint": "eslint src",
+    "lint:format": "biome check --fix",
+    "lint:report": "biome lint --diagnostic-level=error --reporter=junit > lint-results.xml",
+    "lint:staged": "biome check --diagnostic-level=error --staged --no-errors-on-unmatched",
+    "test": "node  --experimental-strip-types --test tests/**/*",
+    "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
+    "test:integration": "node --experimental-strip-types --test integration-tests/**/*",
+    "test:watch": "node --experimental-strip-types --test --watch",
     "release:latest": "npx np",
     "release:next": "npx np prerelease --tag=next"
   },
@@ -38,8 +40,6 @@
     "safe-stable-stringify": "^2.3.0"
   },
   "devDependencies": {
-    "ava": "^6.3.0",
-    "c8": "^10.1.3",
-    "eslint": "^9.24.0"
+    "@biomejs/biome": "^2.3.8"
   }
 }

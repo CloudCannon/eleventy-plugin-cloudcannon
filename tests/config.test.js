@@ -1,12 +1,13 @@
-const test = require('ava');
+const assert = require('node:assert');
+const { test } = require('node:test');
 const { readConfig } = require('../src/config.js');
 
-test('reads legacy config', (t) => {
+test('reads legacy config', () => {
 	const options = {
 		markdownItOptions: {
 			html: true,
-			linkify: true
-		}
+			linkify: true,
+		},
 	};
 
 	const context = {
@@ -14,12 +15,12 @@ test('reads legacy config', (t) => {
 			data: {
 				things: true,
 				stuff: true,
-				nope: false
+				nope: false,
 			},
 			collections: {
 				pages: {
 					path: '',
-					output: true
+					output: true,
 				},
 				staff: {
 					path: 'staff',
@@ -31,31 +32,31 @@ test('reads legacy config', (t) => {
 					_singular_key: 'staff_member',
 					_singular_name: 'Staff Member',
 					_sort_key: 'name',
-					_subtext_key: 'bio'
-				}
+					_subtext_key: 'bio',
+				},
 			},
 			_inputs: {
 				type: 'disabled',
 				id: {
-					instance_value: 'UUID'
-				}
+					instance_value: 'UUID',
+				},
 			},
 			_editor: {
-				default_path: '/base/'
+				default_path: '/base/',
 			},
 			_collection_groups: [
 				{
 					heading: 'Content',
-					collections: ['pages', 'staff']
-				}
+					collections: ['pages', 'staff'],
+				},
 			],
 			_source_editor: {
-				theme: 'dawn'
+				theme: 'dawn',
 			},
 			_select_data: {
-				things: ['Hat', 'Cake']
-			}
-		}
+				things: ['Hat', 'Cake'],
+			},
+		},
 	};
 
 	const expected = {
@@ -66,22 +67,19 @@ test('reads legacy config', (t) => {
 			},
 		},
 		_select_data: {
-			things: [
-				'Hat',
-				'Cake',
-			],
+			things: ['Hat', 'Cake'],
 		},
 		base_url: '',
 		collection_groups: [
 			{
 				heading: 'Content',
-				collections: ['pages', 'staff']
+				collections: ['pages', 'staff'],
 			},
 		],
 		collections_config: {
 			pages: {
 				path: '',
-				output: true
+				output: true,
 			},
 			staff: {
 				path: 'staff',
@@ -93,13 +91,13 @@ test('reads legacy config', (t) => {
 				singular_key: 'staff_member',
 				singular_name: 'Staff Member',
 				sort_key: 'name',
-				subtext_key: 'bio'
+				subtext_key: 'bio',
 			},
 		},
 		data_config: {
 			nope: false,
 			stuff: true,
-			things: true
+			things: true,
 		},
 		editor: {
 			default_path: '/base/',
@@ -121,13 +119,13 @@ test('reads legacy config', (t) => {
 				markdown: 'markdown-it',
 				'markdown-it': {
 					html: true,
-					linkify: true
-				}
-			}
-		}
+					linkify: true,
+				},
+			},
+		},
 	};
 
 	const config = readConfig(context, options);
 
-	t.deepEqual(config, expected);
+	assert.deepStrictEqual(config, expected);
 });

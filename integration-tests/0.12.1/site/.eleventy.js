@@ -15,8 +15,8 @@ module.exports = function (eleventyConfig) {
 
 	eleventyConfig.cloudcannonOptions = {
 		dir: {
-			pages: 'pages'
-		}
+			pages: 'pages',
+		},
 	};
 
 	eleventyConfig.addPlugin(pluginCloudCannon);

@@ -1,4 +1,5 @@
-const test = require('ava');
+const assert = require('node:assert');
+const { test } = require('node:test');
 const { isStaticPage, isPage, processItem } = require('../../src/util/items.js');
 
 const collectionItem = {
@@ -6,51 +7,55 @@ const collectionItem = {
 	url: '/staff/pete/',
 	data: {
 		tags: ['staff', 'another'],
-		seo: { should: 'not be output' }
+		seo: { should: 'not be output' },
 	},
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const staticPage = {
 	inputPath: './static.html',
 	url: '/static/',
 	template: { _layoutKey: null },
-	data: {}
+	data: {},
 };
 
 const page = {
 	data: { title: 'Hi there' },
 	inputPath: './page.html',
-	get fileSlug() { return 'page'; },
-	get filePathStem() { return ''; },
+	get fileSlug() {
+		return 'page';
+	},
+	get filePathStem() {
+		return '';
+	},
 	url: '/page/',
 	template: {
 		_layoutKey: 'abc',
 		templateData: {
 			globalData: {
 				cloudcannon: {},
-				seo: {}
-			}
-		}
-	}
+				seo: {},
+			},
+		},
+	},
 };
 
 const unlistedPage = {
 	...page,
-	data: { ...page.data, _unlisted: true }
+	data: { ...page.data, _unlisted: true },
 };
 
 const nonOutputPage = {
 	...page,
-	url: false
+	url: false,
 };
 
 const processedPage = {
@@ -61,58 +66,58 @@ const processedPage = {
 	output: true,
 	fileSlug: 'page',
 	filePathStem: '',
-	collection: 'pages'
+	collection: 'pages',
 };
 
-test('is static page', (t) => {
-	t.truthy(isStaticPage(staticPage));
-	t.falsy(isStaticPage(page));
-	t.falsy(isStaticPage(collectionItem));
+test('is static page', () => {
+	assert.ok(isStaticPage(staticPage));
+	assert.ok(!isStaticPage(page));
+	assert.ok(!isStaticPage(collectionItem));
 });
 
-test('is page', (t) => {
-	t.truthy(isPage(page));
-	t.falsy(isPage(staticPage));
-	t.falsy(isPage(collectionItem));
+test('is page', () => {
+	assert.ok(isPage(page));
+	assert.ok(!isPage(staticPage));
+	assert.ok(!isPage(collectionItem));
 });
 
-test('processes item', async (t) => {
-	t.deepEqual(await processItem(page, 'pages', '.'), processedPage);
+test('processes item', async () => {
+	assert.deepStrictEqual(await processItem(page, 'pages', '.'), processedPage);
 });
 
-test('processes item in custom source', async (t) => {
+test('processes item in custom source', async () => {
 	const customPage = {
 		...page,
-		inputPath: './src/page.html'
+		inputPath: './src/page.html',
 	};
 
-	t.deepEqual(await processItem(customPage, 'pages', 'src'), processedPage);
+	assert.deepStrictEqual(await processItem(customPage, 'pages', 'src'), processedPage);
 });
 
-test('processes item with custom source formatted differently', async (t) => {
+test('processes item with custom source formatted differently', async () => {
 	const customPage = {
 		...page,
-		inputPath: './src/page.html'
+		inputPath: './src/page.html',
 	};
 
-	t.deepEqual(await processItem(customPage, 'pages', '/src'), processedPage);
+	assert.deepStrictEqual(await processItem(customPage, 'pages', '/src'), processedPage);
 });
 
-test('processes invalid item', async (t) => {
-	t.is(await processItem({}, 'pages', '.'), undefined);
+test('processes invalid item', async () => {
+	assert.equal(await processItem({}, 'pages', '.'), undefined);
 });
 
-test('processes unlisted item', async (t) => {
-	t.deepEqual(await processItem(unlistedPage, 'pages', '.'), {
+test('processes unlisted item', async () => {
+	assert.deepStrictEqual(await processItem(unlistedPage, 'pages', '.'), {
 		...processedPage,
-		_unlisted: true
+		_unlisted: true,
 	});
 });
 
-test('processes non output item', async (t) => {
-	t.deepEqual(await processItem(nonOutputPage, 'pages', '.'), {
+test('processes non output item', async () => {
+	assert.deepStrictEqual(await processItem(nonOutputPage, 'pages', '.'), {
 		...processedPage,
 		url: '',
-		output: false
+		output: false,
 	});
 });

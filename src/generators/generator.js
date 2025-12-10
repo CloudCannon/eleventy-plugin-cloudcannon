@@ -1,7 +1,8 @@
 function getGenerator(context, config) {
-	const eleventyVersion = context.pkg?.dependencies?.['@11ty/eleventy']
-		|| context.pkg?.devDependencies?.['@11ty/eleventy']
-		|| '';
+	const eleventyVersion =
+		context.pkg?.dependencies?.['@11ty/eleventy'] ||
+		context.pkg?.devDependencies?.['@11ty/eleventy'] ||
+		'';
 
 	return {
 		name: 'eleventy',
@@ -11,11 +12,11 @@ function getGenerator(context, config) {
 		metadata: {
 			markdown: 'markdown-it',
 			'markdown-it': { html: true },
-			...config.generator?.metadata
+			...config.generator?.metadata,
 		},
 	};
 }
 
 module.exports = {
-	getGenerator
+	getGenerator,
 };
