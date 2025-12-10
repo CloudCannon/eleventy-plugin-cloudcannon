@@ -8,10 +8,11 @@
     "lint:report": "biome lint --diagnostic-level=error --reporter=junit > lint-results.xml",
     "lint:staged": "biome check --diagnostic-level=error --staged --no-errors-on-unmatched",
     "test": "node  --experimental-strip-types --test tests/**/*",
+    "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
     "test:integration": "node --experimental-strip-types --test integration-tests/**/*",
     "test:watch": "node --experimental-strip-types --test --watch",
-    "test:coverage": "node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=lcov.info",
-    "release:latest": "npx np"
+    "release:latest": "npx np",
+    "release:next": "npx np prerelease --tag=next"
   },
   "files": [
     ".eleventy.js",

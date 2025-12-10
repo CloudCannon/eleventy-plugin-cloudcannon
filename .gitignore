@@ -1,5 +1,6 @@
 /node_modules/
-/coverage/
+lcov.info
+lint-results.xml
 /integration-tests/*/site/cloudcannon/
 /integration-tests/*/site/_site/
 /integration-tests/*/site/node_modules/
