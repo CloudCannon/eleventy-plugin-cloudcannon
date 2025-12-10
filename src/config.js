@@ -11,14 +11,12 @@ function readFileSync(configPath) {
 			`${moduleName}.config.yaml`,
 			`${moduleName}.config.yml`,
 			`${moduleName}.config.js`,
-			`${moduleName}.config.cjs`
-		]
+			`${moduleName}.config.cjs`,
+		],
 	});
 
 	try {
-		const config = configPath
-			? explorerSync.load(configPath)
-			: explorerSync.search();
+		const config = configPath ? explorerSync.load(configPath) : explorerSync.search();
 
 		if (config) {
 			const cwd = process.cwd();
@@ -100,8 +98,8 @@ function readConfig(context, options = {}) {
 			data: file.paths?.data || options.dir?.data || '_data',
 			collections: '',
 			pages: file.paths?.pages || options.dir?.pages || '',
-			layouts: file.paths?.layouts || options.dir?.layouts || '_includes'
-		}
+			layouts: file.paths?.layouts || options.dir?.layouts || '_includes',
+		},
 	};
 
 	if (options.markdownItOptions) {
@@ -109,8 +107,8 @@ function readConfig(context, options = {}) {
 			...config.generator,
 			metadata: {
 				markdown: 'markdown-it',
-				'markdown-it': options.markdownItOptions
-			}
+				'markdown-it': options.markdownItOptions,
+			},
 		};
 	}
 
@@ -122,5 +120,5 @@ function readConfig(context, options = {}) {
 }
 
 module.exports = {
-	readConfig
+	readConfig,
 };

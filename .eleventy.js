@@ -32,8 +32,8 @@ module.exports = function (eleventyConfig, defaultOptions) {
 			input: normalisePath(input || ccOptions.dir?.input || '.'),
 			pages: normalisePath(ccOptions.dir?.pages || ''), // relative to input
 			data: normalisePath(ccOptions.dir?.data || '_data'), // relative to input
-			layouts: normalisePath(ccOptions.dir?.layouts || '_includes') // relative to input
-		}
+			layouts: normalisePath(ccOptions.dir?.layouts || '_includes'), // relative to input
+		},
 	};
 
 	// Create the template file for Eleventy to process and call the ccInfo tag
@@ -52,7 +52,7 @@ module.exports = function (eleventyConfig, defaultOptions) {
 				const json = stringifyJson(info);
 				log(`🏁 Generated ${bold('_cloudcannon/info.json')} ${green('successfully')}`);
 				return json;
-			}
+			},
 		};
 	});
 };

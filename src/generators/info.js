@@ -12,7 +12,7 @@ function cheapPlural(amount, str) {
 
 const cloudcannon = {
 	name: module.exports.name,
-	version: module.exports.version
+	version: module.exports.version,
 };
 
 async function getInfo(context, config) {
@@ -39,10 +39,10 @@ async function getInfo(context, config) {
 		data: getData(context, config),
 		generator: getGenerator(context, config),
 		time: new Date().toISOString(),
-		version: '0.0.3' // schema version
+		version: '0.0.3', // schema version
 	};
 }
 
 module.exports = {
-	getInfo
+	getInfo,
 };

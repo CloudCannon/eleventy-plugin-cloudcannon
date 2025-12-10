@@ -2,17 +2,17 @@ module.exports = {
 	timezone: 'Etc/UTC',
 	_inputs: {
 		layout: {
-			hidden: 'true'
-		}
+			hidden: 'true',
+		},
 	},
 	paths: {
-		pages: 'pages'
+		pages: 'pages',
 	},
 	collections_config: {
 		authors: {
 			name: 'The Authors',
 			path: 'authors',
-			output: false
-		}
-	}
+			output: false,
+		},
+	},
 };
