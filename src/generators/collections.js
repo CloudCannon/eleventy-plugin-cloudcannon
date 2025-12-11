@@ -1,5 +1,5 @@
-const { readdirSync } = require('fs');
-const { dirname, join } = require('path');
+const { readdirSync } = require('node:fs');
+const { dirname, join } = require('node:path');
 const { bold } = require('ansi-colors');
 const { log } = require('../util/logger.js');
 const { stringifyJson } = require('../util/json.js');
