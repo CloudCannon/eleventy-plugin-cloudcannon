@@ -1,5 +1,5 @@
-const { mkdirSync, writeFileSync } = require('fs');
-const { dirname, join } = require('path');
+const { mkdirSync, writeFileSync } = require('node:fs');
+const { dirname, join } = require('node:path');
 const { bold, green, blue, red } = require('ansi-colors');
 const { getInfo } = require('./src/generators/info.js');
 const { readConfig } = require('./src/config.js');
@@ -41,7 +41,7 @@ module.exports = function (eleventyConfig, defaultOptions) {
 	mkdirSync(dirname(templatePath), { recursive: true });
 	writeFileSync(templatePath, infoTemplate);
 
-	eleventyConfig.addLiquidTag('ccInfo', function (liquidEngine) {
+	eleventyConfig.addLiquidTag('ccInfo', function (_liquidEngine) {
 		return {
 			parse: function () {},
 			render: async function (ctx) {

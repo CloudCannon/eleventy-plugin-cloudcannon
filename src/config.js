@@ -1,4 +1,4 @@
-const { relative } = require('path');
+const { relative } = require('node:path');
 const { cosmiconfigSync } = require('cosmiconfig');
 const { red, bold, yellow } = require('ansi-colors');
 const { log, logError } = require('./util/logger.js');
@@ -71,7 +71,8 @@ function getLegacyConfig(context) {
 			rewriteKey(collectionConfig, '_icon', 'icon');
 			rewriteKey(collectionConfig, '_add_options', 'add_options');
 
-			return { ...memo, [key]: collectionConfig };
+			memo[key] = collectionConfig;
+			return memo;
 		}, {});
 
 		rewriteKey(legacy, 'collections', 'collections_config');

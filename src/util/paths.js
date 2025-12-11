@@ -11,7 +11,7 @@ function stripTopPath(path, topPath) {
 	return path.startsWith(normalisedTop) ? path.substring(normalisedTop.length) : path;
 }
 
-function isTopPath(basePath, index, basePaths) {
+function isTopPath(basePath, _index, basePaths) {
 	return !basePaths.some((other) => other !== basePath && basePath.startsWith(`${other}/`));
 }
 

@@ -1,4 +1,4 @@
-const { dirname, basename, extname } = require('path');
+const { dirname, basename, extname } = require('node:path');
 const isEqual = require('lodash.isequal');
 const { getSourcePath } = require('../util/paths.js');
 
