@@ -37,7 +37,7 @@
     "cosmiconfig": "^10.0.0",
     "lodash.isequal": "^4.5.0",
     "pkginfo": "^0.4.1",
-    "safe-stable-stringify": "^2.3.0"
+    "safe-stable-stringify": "^3.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8"
